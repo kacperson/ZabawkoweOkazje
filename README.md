@@ -22,3 +22,6 @@ Projekt ma na celu zbudowanie aplikacji webowej, która ma ułatwić zakupy inte
 
 ### lokalna baza danych
 ![image](https://user-images.githubusercontent.com/48855984/202875828-defdb5cf-73ba-45fd-b48b-4b2647d95c05.png)
+
+### zasada działania (wstępna)
+Otrzymujemy plik.json, sortujemy po dostawcach, dodajemy ceny, wyświetlamy wynik
