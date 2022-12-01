@@ -24,4 +24,5 @@ Projekt ma na celu zbudowanie aplikacji webowej, która ma ułatwić zakupy inte
 ![image](https://user-images.githubusercontent.com/48855984/202875828-defdb5cf-73ba-45fd-b48b-4b2647d95c05.png)
 
 ### zasada działania (wstępna)
-Otrzymujemy plik.json, sortujemy po dostawcach, dodajemy ceny, wyświetlamy wynik
+Otrzymujemy pliki.json, łączymy w megaliste, wyniki wyświetlamy domyślnie posortowane po cenie (osobno różne typy zabawek), jeżeli będzie sortowanie po dostawcy to wyniki od tych samych dostawców się mergują.
+
