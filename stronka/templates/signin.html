@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block links %}
+<link rel="stylesheet" href="../static/css/login_register.css">
+{% endblock %}
+{% block content %}
+<main>
+        <div class="login p-0">
+            <div class="back">
+                <a href="/"><i class="fa-solid fa-angle-left fa-2xl"></i></a>
+            </div>
+            <div class="logcont container p-2">
+                <div class="d-flex flex-md-row flex-wrap text-center justify-content-center">
+                    <div class="form-items log-items">
+                        <h1>Sign In</h1>
+                        <form method="POST" class="form-signin">
+                            {{ form.hidden_tag() }}
+
+                            <div class="col-md-16">
+                               {{ form.username(class="form-control", placeholder="Username") }}
+                            </div>
+
+                           <div class="col-md-16">
+                                {{ form.email_address(class="form-control", placeholder="E-mail Address") }}
+                            </div>
+
+                           <div class="col-md-16">
+                              {{ form.password1(class="form-control", placeholder="Password") }}
+                           </div>
+
+                          <div class="col-md-16">
+                              {{ form.password2(class="form-control", placeholder="Confirm Password") }}
+                           </div>
+                            <div class="form-button mt-3 text-center">
+                                 {{ form.submit(class="btn") }}
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+{% endblock %}
+{% block scripts %}
+<script src="https://kit.fontawesome.com/05a09beaf0.js" crossorigin="anonymous"></script>
+{% endblock %}

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+
+    <title>Zabawkowe Okazje</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="../static/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+
+    <!-- Additional CSS Files -->
+    <link rel="stylesheet" href="../static/css/style.css">
+    <!--<link rel="stylesheet" href="../static/css/animated.css">-->
+    <link rel="stylesheet" href="../static/css/owl.css">
+    {% block links %}
+    {% endblock %}
+  </head>
+
+<body>
+<div class="lds-ripple"><div></div><div></div></div>
+
+<!-- ***** Header Area  ***** -->
+  <header class="header-area header-sticky wow slideInDown" data-wow-duration="0.75s" data-wow-delay="0s">
+    <div class="container">
+      <div class="row">
+        <div class="col-12">
+          <nav class="main-nav">
+            <!-- ***** Logo ***** -->
+            <a href="/home" class="logo">
+              <h1><img src="../static/image/logo-icon.png" alt=""></h1>
+            </a>
+
+            <!-- ***** Menu ***** -->
+            <ul class="nav">
+              <li class="scroll-to-section"><a href="/home" class="active">Home</a></li>
+              <!--<li class="scroll-to-section"><a href="#features">Features</a></li>-->
+              <li class="scroll-to-section"><a href="/about">About Us</a></li>
+              <li><a href="/list">List</a></li>
+              <li class="scroll-to-section"><a href="/contact">Contact Us</a></li>
+              {% if current_user.is_authenticated %}
+              <a href="{{ url_for('logout_page') }}" class="nav-link login">Logout</a>
+              {% else %}
+              <li class="scroll-to-section"><a href="/login">Login</a></li>
+              <li class="scroll-to-section"><a href="/signin">Sign In</a></li>
+              {% endif %}
+              <li><div class="cart-button">
+                <i href="/cart" class="fa-solid fa-cart-shopping fa-fw" ></i>
+              </div></li>
+
+            </ul>
+
+          </nav>
+        </div>
+      </div>
+    </div>
+  </header>
+{% block content %}
+{% endblock %}
+
+{% block scripts %}
+{% endblock %}
+</body>
+</html>

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+
+    <title>Zabawkowe Okazje</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="../static/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+
+    <!-- Additional CSS Files -->
+    <link rel="stylesheet" href="../static/css/style.css">
+    <link rel="stylesheet" href="../static/css/list.css">
+    <link rel="stylesheet" href="../static/css/owl.css">
+
+</head>
+
+<body>
+
+<!-- ***** Preloader ***** -->
+<div class="lds-ripple"><div></div><div></div></div>
+
+<!-- ***** Header Area  ***** -->
+  <header class="header-area header-sticky wow slideInDown" data-wow-duration="0.75s" data-wow-delay="0s">
+    <div class="container">
+      <div class="row">
+        <div class="col-12">
+          <nav class="main-nav">
+            <!-- ***** Logo ***** -->
+            <a href="index.html" class="logo">
+              <h1><img src="../static/image/logo-icon.png" alt=""></h1>
+            </a>
+
+            <!-- ***** Menu ***** -->
+            <ul class="nav">
+              <li class="scroll-to-section"><a href="#top" class="active">Home</a></li>
+              <li class="scroll-to-section"><a href="#features">Features</a></li>
+              <li class="scroll-to-section"><a href="#about">About Us</a></li>
+              <li><a href="#list">List</a></li>
+              <li class="scroll-to-section"><a href="#contact">Contact Us</a></li>
+              <li><div class="cart-button">
+                <i href="#cart" class="fa-solid fa-cart-shopping fa-fw" ></i>
+              </div></li>
+            </ul>
+
+          </nav>
+        </div>
+      </div>
+    </div>
+  </header>
+
+    <main>
+        <div class="list text-center justify-content-center">
+            <div class="container d-flex flex-column">
+                <div class="s004">
+                  <form>
+                    <fieldset>
+                      <legend>CZEGO SZUKASZ?</legend>
+                      <div class="inner-form">
+                        <div class="input-field">
+                          <input class="form-control" id="choices-text-preset-values" type="text" placeholder="Type to search..." />
+                          <button class="btn-search" type="button">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                          </button>
+                        </div>
+                      </div>
+                    </fieldset>
+                  </form>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+
+<script src="https://kit.fontawesome.com/05a09beaf0.js" crossorigin="anonymous"></script>
+<script src="../static/js/extention/choices.js"></script>
+    <script>
+      var textPresetVal = new Choices('#choices-text-preset-values',
+      {
+        removeItemButton: true,
+      });
+
+    </script>
+</html>

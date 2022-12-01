@@ -1,2 +1,3 @@
-# ZabawkoweOkazje
-Aplikacja optymalizująca zakupy zabawek
+# SWM_Hack
+
+## dupa
