@@ -35,4 +35,4 @@ Aby uruchomić aplikację, potrzebujesz dockera.
   docker compose up -d
 ```
 
-Powyższa komenda automatycznie buduje i urachamia kontener aplikacji i bazę danych
+Powyższa komenda automatycznie buduje i uruchamia kontener aplikacji i bazę danych
