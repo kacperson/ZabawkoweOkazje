@@ -27,3 +27,12 @@ Projekt ma na celu zbudowanie aplikacji webowej, która ma ułatwić zakupy inte
 ### zasada działania (wstępna)
 Otrzymujemy pliki.json, łączymy w megaliste, wyniki wyświetlamy domyślnie posortowane po cenie (osobno różne typy zabawek), jeżeli będzie sortowanie po dostawcy to wyniki od tych samych dostawców się mergują.
 
+## How to start
+
+Aby uruchomić aplikację, potrzebujesz dockera.
+
+```bash
+  docker compose up -d
+```
+
+Powyższa komenda automatycznie buduje i urachamia kontener aplikacji i bazę danych
