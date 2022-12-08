@@ -90,9 +90,9 @@ header
 }
 
 .header-area .main-nav .nav {
-  float: right;
+  float: left;
   margin-top: 30px;
-  margin-right: 0px;
+  margin-left: 100px;
   background-color: transparent;
   -webkit-transition: all 0.3s ease 0s;
   -moz-transition: all 0.3s ease 0s;
@@ -102,22 +102,18 @@ header
   z-index: 999;
 }
 
+.header-area .action-buttons{
+  float: right;
+  position: relative;
+  padding-left: 20px;
+  padding-right: 20px;
+}
 .header-area .main-nav .nav li {
   padding-left: 20px;
   padding-right: 20px;
 }
 
-.header-area .main-nav .nav li:last-child {
-  margin-top: -10px;
-  padding-right: 0px;
-  padding-left: 40px;
-}
 
-.header-area .main-nav .nav li:last-child a ,
-.background-header .main-nav .nav li:last-child a {
-  padding: 0px 20px;
-  font-weight: 400;
-}
 
 .header-area .main-nav .nav li a {
   display: block;
@@ -154,7 +150,7 @@ header
 }
 
 @media (max-width: 1200px) {
-  .header-area .main-nav .nav li {
+  .header-area .main-nav li {
     padding-left: 12px;
     padding-right: 12px;
   }
@@ -163,26 +159,22 @@ header
   }
 }
 
-.header-area .main-nav .nav .cart-button {
-  border-color: #6799E0;
-  border-width: 7px;
-  border-style: dotted;
-  border-radius: 100%;
+.header-area .main-nav .nav-button {
   text-decoration: none;
-  padding: 11px 11px;
- display: inline-block;
+  padding: 7px 6px;
+  display: inline-block;
   transition: transform .7s ease-in-out ;
 }
 
-.header-area .main-nav .nav .cart-button i{
+.header-area .main-nav  .nav-button i{
   color: #6799E0;
 }
-.header-area .main-nav .nav .cart-button:hover {
-transform: rotate(15deg);
+.header-area .main-nav .nav-button:hover {
+transform: rotate(10deg);
 }
 
 @media (max-width: 767px) {
-  .background-header .main-nav .nav {
+  .background-header .main-nav  {
     margin-top: 80px !important;
   }
   .header-area .main-nav .logo {
@@ -190,7 +182,7 @@ transform: rotate(15deg);
   }
   .header-area.header-sticky .nav li a:hover,
   .header-area.header-sticky .nav li a.active {
-    color: #33ccc5!important;
+    color: #6799E0!important;
     opacity: 1;
   }
 
@@ -215,7 +207,7 @@ transform: rotate(15deg);
   }
   .header-area .main-nav .nav {
     float: none;
-    width: 100%;
+    width: 60%;
     display: block;
     -webkit-transition: all 0s ease 0s;
     -moz-transition: all 0s ease 0s;
@@ -249,7 +241,7 @@ transform: rotate(15deg);
   }
   .header-area .main-nav .nav li a:hover {
     background: #eee !important;
-    color: #33ccc5!important;
+    color: #6799E0!important;
   }
 
 }
@@ -258,6 +250,101 @@ transform: rotate(15deg);
   .header-area .main-nav .nav {
     display: flex !important;
   }
+}
+
+.main-nav .auth .nav-right{
+    float: right;
+    display: block;
+    -webkit-transition: all 0s ease 0s;
+    -moz-transition: all 0s ease 0s;
+    -o-transition: all 0s ease 0s;
+    transition: all 0s ease 0s;
+    margin-top: 30px;
+}
+
+.main-nav .auth .nav-right li{
+  display: inline-block;
+  padding-left: 10px ;
+  padding-right: 10px;
+  float: left;
+
+}
+
+.form-control {
+	box-shadow: none;
+	font-weight: normal;
+	font-size: 13px;
+}
+
+ .sign-up-btn {
+	min-width: 110px;
+	max-height: 36px;
+    font-weight: bold;
+}
+ .dropdown-menu {
+	color: #c7c7c7;
+	font-weight: normal;
+	border-radius: 1px;
+	border-color: #e5e5e5;
+	box-shadow: 0 2px 8px rgba(0,0,0,.05);
+}
+
+ .main-nav .auth .nav-right .login {
+   font-weight: bold;
+   font-size: 15px;
+  color: #FFA7E4;
+  text-transform: capitalize;
+  -webkit-transition: all 0.3s ease 0s;
+  -moz-transition: all 0.3s ease 0s;
+  -o-transition: all 0.3s ease 0s;
+  transition: all 0.3s ease 0s;
+  border: transparent;
+  letter-spacing: 1px;
+ }
+
+ .auth .navbar-form {
+	border: none;
+}
+ .auth .action-form {
+	width: 290px;
+	padding: 20px;
+    border-radius: 15px;
+	left: auto;
+	right: 0;
+	font-size: 14px;
+}
+ .auth .action-form a {
+	color: #6799E0;
+	padding: 0 !important;
+	font-size: 14px;
+}
+.auth .action-form .hint-text {
+    text-align: center;
+    margin-bottom: 15px;
+    font-size: 13px;
+}
+
+.auth .form-group {
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+ .auth .btn-primary, .navbar .btn-primary:active {
+	color: #fff;
+	background: #6799E0 !important;
+	border: none;
+}
+ .auth .btn-primary:hover, .navbar .btn-primary:focus {
+	color: #fff;
+	background: #6799E0 !important;
+}
+
+.auth .action-buttons .dropdown-toggle::after {
+	display: none;
+}
+.auth .form-check-label input {
+	position: relative;
+	top: 1px;
 }
 
 /*
