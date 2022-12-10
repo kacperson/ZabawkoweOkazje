@@ -117,6 +117,7 @@ header
 
 .header-area .main-nav .nav li a {
   display: block;
+  text-decoration: none;
   font-weight: bold;
   font-size: 15px;
   color: #FFA7E4;
@@ -408,18 +409,12 @@ main banner
 
 .main-banner .banner{
   width: 100%;
-  background: url("../image/room.jpg");
-  background-size: 80%;
+  background: url("../image/room-bg.jpg");
+  background-size: 100%;
   position: relative;
 }
 
-.main-banner .banner .background-room{
-    position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-}
+
 
 .main-banner .banner .content{
   width: 100%;
@@ -428,13 +423,79 @@ main banner
   padding-bottom: 30vmin;
 }
 
+.main-banner .banner .content .title{
+  padding: 8vmin 4vmin;
+  width: 900px;
+  text-align: center;
+  margin: 0 auto;
+  border-radius: 24% 76% 46% 54% / 57% 43% 57% 43%;
+  box-shadow: 7.0px 13.9px 13.9px hsl(0deg 0% 0% / 0.28);
+  background: #eeeeee;
+  position: center;
+}
+
 .main-banner .banner .content h1{
   font-weight: bold;
-  font-size: 50px;
+  font-size: 40px;
 }
 
 .main-banner .banner .content p{
-  font-weight: bold;
-  font-size: 30px;
+  font-weight: normal;
+  font-size: 20px;
+}
 
+.service_section .custom-header h1{
+  font-weight: bold;
+}
+
+.service_section {
+  text-align: center;
+  padding-top: 200px;
+  padding-bottom: 125px;
+  background-repeat: no-repeat;
+  margin-top: -130px;
+}
+
+.service_section .custom-header h1 {
+  border-color: #2657a1;
+}
+
+.service_section .service_container {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+}
+
+.service_section .service_container .service_box {
+  width: 30%;
+  min-width: 300px;
+  margin: 35px 15px;
+}
+
+.service_section .service_container .service_box .img-box {
+  border-radius: 18px;
+  margin-top: -100px;
+  overflow: hidden;
+}
+
+.service_section .service_container .service_box .img-box img {
+  width: 100%;
+}
+
+.service_section .service_container .service_box .detail-box {
+  margin-top: -100px;
+}
+
+.service_section .service_container .service_box .detail-box h4 {
+  font-weight: bold;
+}
+
+.service_section a:hover {
+  -webkit-transform: translateY(-7px);
+          transform: translateY(-7px);
 }

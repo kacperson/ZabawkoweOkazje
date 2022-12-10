@@ -3,17 +3,69 @@
 
 {% block content %}
 <main>
-    <div class="main-banner">
+    <section class="main-banner">
       <div class="container-fluid p-0">
         <div class="banner">
-          <div class="background-room"></div>
-          <div class="content text-center">
-            <h1>Welcome to Zabawkowe Okazje</h1>
-            <p>An ultimate place with toys</p>
+          <div class="content">
+              <div class="title text-center">
+                <h1>Witaj na stronie Zabawkowe Okazje</h1>
+                    <p>Miejsce, gdzie znajdziesz wszystkie zabawki</p>
+              </div>
           </div>
         </div>
       </div>
-    </div>
+    </section>
+
+    <section class="service_section">
+        <div class="container-fluid p-0">
+            <div class="custom-header">
+                <h1>Zacznij już teraz!</h1>
+            </div>
+            <div class="service_container layout_padding2">
+        <div class="service_box">
+          <div class="img-box">
+            <img src="../static/image/search.png" alt=""/>
+          </div>
+          <div class="detail-box">
+            <h4>
+              Wyszukaj produkt
+            </h4>
+            <p>
+              W zakładce Listy <i  class="fa-solid fa-list-ul fa-fw"></i> wyszukaj produktu, którego szukasz.
+            </p>
+          </div>
+        </div>
+        <div class="service_box">
+          <div class="img-box">
+            <img src="../static/image/findprice.png" alt=""/>
+          </div>
+          <div class="detail-box">
+            <h4>
+              Porównaj Ceny
+            </h4>
+            <p>
+              Znajdź najlepsze oferty dzięki Naszej porównywarce cen.
+            </p>
+          </div>
+        </div>
+        <div class="service_box">
+          <div class="img-box">
+            <img src="../static/image/cart.png" alt=""/>
+          </div>
+          <div class="detail-box">
+            <h4>
+              Dodaj do koszyka
+            </h4>
+            <p>
+              Dodaj produkt do koszyka i ciesz się dobrze zaplanowanymi zakupami.
+            </p>
+          </div>
+        </div>
+      </div>
+        </div>
+    </section>
+
+
   </main>
 
 {% endblock %}
