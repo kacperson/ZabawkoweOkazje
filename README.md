@@ -12,7 +12,6 @@ Projekt ma na celu zbudowanie aplikacji webowej, która ma ułatwić zakupy inte
  "nazwa"            :"string",
  "cena"             :"float",
  "dostawca"         :"string",
- "sklep"            :["allegro","ceneo"],
  "czas_dostarczenia":"time",
  "link"             :"string"
 }
