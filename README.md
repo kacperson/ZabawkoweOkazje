@@ -9,6 +9,7 @@ Projekt ma na celu zbudowanie aplikacji webowej, która ma ułatwić zakupy inte
 ### przedmioty.json
 ```
 {
+ "id"               :"int"
  "nazwa"            :"string",
  "cena"             :"float",
  "cena dostawy"     :"float",
