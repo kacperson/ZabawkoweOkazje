@@ -11,6 +11,7 @@ Projekt ma na celu zbudowanie aplikacji webowej, która ma ułatwić zakupy inte
 {
  "nazwa"            :"string",
  "cena"             :"float",
+ "cena dostawy"     :"float",
  "dostawca"         :"string",
  "czas_dostarczenia":"time",
  "link"             :"string"
