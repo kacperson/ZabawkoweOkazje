@@ -15,7 +15,6 @@ if __name__ == '__main__':
     driver.maximize_window()
     bot = Ceneo(driver)
     bot.odpalenie_strony()
-    for elem in lista_zakupow:
-        print(elem)
-        bot.wyszukiwanie(elem)
+    output = bot.wyszukiwanie(lista_zakupow)
+    print(output)
     print(time.time()-start_time)
