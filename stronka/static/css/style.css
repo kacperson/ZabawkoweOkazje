@@ -428,7 +428,7 @@ main banner
   width: 900px;
   text-align: center;
   margin: 0 auto;
-  border-radius: 24% 76% 46% 54% / 57% 43% 57% 43%;
+  border-radius: 70px;
   box-shadow: 7.0px 13.9px 13.9px hsl(0deg 0% 0% / 0.28);
   background: #eeeeee;
   position: center;
