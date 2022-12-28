@@ -8,6 +8,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 class Ceneo:
+    #mydict = {}
 
     def __init__(self, driver):
         self.driver = driver
@@ -15,7 +16,41 @@ class Ceneo:
     def odpalenie_strony(self):
         self.driver.get("https://www.ceneo.pl/Zabawki")
 
-    def wyszukiwanie(self, items):
+    def zwrocenie_listy(self, items):
+        id = 0
+        mydict = {}
+        for item in items:
+            id = id + 1
+            products = []
+            wyszukiwarka = self.driver.find_element(By.ID, "form-head-search-q")
+            wyszukiwarka.clear()
+            wyszukiwarka.send_keys(item)
+            wyszukiwarka.send_keys(Keys.ENTER)
+            url = self.driver.current_url
+            if url.find("OneClickSearch") == -1:
+                #print("PRODUKT NIEJEDNOZNACZNY WYBIERZ")
+                lista = []
+                element = self.driver.find_element(By.CLASS_NAME, "dropdown-wrapper")
+                self.driver.execute_script("arguments[0].click()", element)
+                element = self.driver.find_element(By.XPATH,
+                                                   '//*[@id="body"]/div/div/div[3]/div/section/div[2]/div[2]/div/div/a[2]')
+                self.driver.execute_script("arguments[0].click()", element)
+                self.driver.implicitly_wait(1)  # seconds
+                lista_propozycji = self.driver.find_element(By.CLASS_NAME, "js_search-results")
+                ilosc = len(lista_propozycji.find_elements(By.XPATH, './div'))
+
+                if ilosc > 11:
+                    ilosc = 11
+                for i in range(0, ilosc - 1):
+                    #print(f'{i + 1}. ',
+                     #     lista_propozycji.find_element(By.XPATH, f'./div[@data-position="{i}"]').get_attribute(
+                      #        'data-productname'))
+                    lista.append(lista_propozycji.find_element(By.XPATH, f'./div[@data-position="{i}"]').get_attribute(
+                        'data-productname'))
+                    #mydict[i] = lista_propozycji.find_element(By.XPATH, f'./div[@data-position="{i}"]').get_attribute('data-productname')
+                return lista
+
+    def wyszukiwanie(self, items, number):
         id = 0
         for item in items:
             id = id + 1
@@ -26,7 +61,7 @@ class Ceneo:
             wyszukiwarka.send_keys(Keys.ENTER)
             url = self.driver.current_url
             if url.find("OneClickSearch") == -1:
-                print("PRODUKT NIEJEDNOZNACZNY WYBIERZ")
+                #print("PRODUKT NIEJEDNOZNACZNY WYBIERZ")
                 lista = []
                 element = self.driver.find_element(By.CLASS_NAME, "dropdown-wrapper")
                 self.driver.execute_script("arguments[0].click()", element)
@@ -35,12 +70,15 @@ class Ceneo:
                 self.driver.implicitly_wait(1)  # seconds
                 lista_propozycji = self.driver.find_element(By.CLASS_NAME, "js_search-results")
                 ilosc = len(lista_propozycji.find_elements(By.XPATH, './div'))
+
                 if ilosc > 11:
                     ilosc = 11
                 for i in range (0, ilosc-1):
-                    print(f'{i+1}. ',lista_propozycji.find_element(By.XPATH, f'./div[@data-position="{i}"]').get_attribute('data-productname'))
+                    #print(f'{i+1}. ',lista_propozycji.find_element(By.XPATH, f'./div[@data-position="{i}"]').get_attribute('data-productname'))
                     lista.append(lista_propozycji.find_element(By.XPATH, f'./div[@data-position="{i}"]').get_attribute('data-productname'))
-                numer = int(input(f"Wybierz produkt od 1-{ilosc-1}: "))
+                    #self.mydict[i] = lista_propozycji.find_element(By.XPATH, f'./div[@data-position="{i}"]').get_attribute('data-productname')
+                #print(lista)
+                numer = number
                 if lista_propozycji.find_element(By.XPATH, f'./div[@data-position="{numer-1}"]/div/div[2]/div[2]/div[1]/a[1]').text.lower() == 'idź do sklepu':
                     attributes = {"id": id}
                     attributes["nazwa"] = lista_propozycji.find_element(By.XPATH, f'./div[@data-position="{i}"]').get_attribute('data-productname')
@@ -61,7 +99,10 @@ class Ceneo:
             else:
                 products.append(self.raporcik(ajdi=id))
 
-        return json.dumps(products, indent=2)
+        #print(attributes)
+        #print(products)
+        return products
+        #return attributes
 
     def raporcik(self, ajdi):
         attributes = {"id": ajdi}

@@ -1,13 +1,17 @@
+from flask import jsonify
 from selenium.webdriver.chrome.options import Options
 import undetected_chromedriver as uc
 from multiprocessing import freeze_support
-from ceneo import Ceneo
+from .my_ceneo import Ceneo
 import time
-if __name__ == '__main__':
+
+
+
+def ceneo_scrapper(list):
     start_time = time.time()
     lista_zakupow = []
     for i in range(0, 1):
-        lista_zakupow.append(input(f"Wprowadź nazwe {i+1} produktu: "))
+        lista_zakupow.append(list)
     freeze_support()
     options = Options()
     options.add_argument("--headless")
@@ -15,6 +19,7 @@ if __name__ == '__main__':
     driver.maximize_window()
     bot = Ceneo(driver)
     bot.odpalenie_strony()
-    output = bot.wyszukiwanie(lista_zakupow)
+    output = bot.wyszukiwanie(lista_zakupow, 1)
     print(output)
     print(time.time()-start_time)
+    return output

@@ -1,10 +1,16 @@
 from flask import render_template, redirect, url_for, flash, request, jsonify
-from flask_login import login_user, logout_user, login_required, current_user
+from flask_login import login_user, logout_user
 from stronka import app
 from stronka.forms import RegisterForm, LoginForm
 from stronka.models import User
 from stronka import db
-import requests
+from stronka.ceneo.main import ceneo_scrapper
+from stronka.ceneo.my_ceneo import Ceneo
+import undetected_chromedriver as uc
+from selenium.webdriver.chrome.options import Options
+from multiprocessing import freeze_support
+
+
 
 
 @app.route('/')
@@ -57,4 +63,49 @@ def logout_page():
     logout_user()
     flash("You have been logged out!", category='info')
     return redirect(url_for("home_page"))
+
+@app.route('/ceneo', methods=['POST'])
+def get_ceneo():
+    params = request.get_json()["params"]
+    lista1 = []
+    lista1.append(params)
+
+    freeze_support()
+    options = Options()
+    options.add_argument("--headless")
+    driver = uc.Chrome(options=options)
+    driver.maximize_window()
+    bot = Ceneo(driver)
+    bot.odpalenie_strony()
+    output = bot.zwrocenie_listy(lista1)
+    print(params)
+    lista2 = ["jeden", "dwa", "trzy", "cztery", "pięć", "sześć", "siedem", "osiem", "dziewięć", "dziesięć"]
+    zipped = dict(zip(lista2, output))
+    print(zipped)
+
+    return jsonify(zipped)
+
+@app.route('/show_choice', methods=['POST'])
+def show_choice():
+    params = request.get_json()["params"]
+    number = request.get_json()["number"]
+    lista1 = []
+    lista1.append(params)
+    print(params)
+    print(number)
+    freeze_support()
+    options = Options()
+    options.add_argument("--headless")
+    driver = uc.Chrome(options=options)
+    driver.maximize_window()
+    bot = Ceneo(driver)
+    bot.odpalenie_strony()
+    output = bot.wyszukiwanie(lista1, int(number))
+    d1={}
+    for i in output:
+        d1.update(i)
+    print(d1)
+    return d1
+
+
 

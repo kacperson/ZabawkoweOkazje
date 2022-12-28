@@ -2,6 +2,7 @@ from flask import Flask
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
+from stronka.ceneo import my_ceneo
 
 app = Flask(__name__)
 app.debug = True
