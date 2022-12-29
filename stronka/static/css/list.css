@@ -603,3 +603,29 @@ legend {
   padding-left: 10px ;
   padding-right: 10px;
 }
+
+#list {
+      margin: auto;
+      display: none;
+}
+
+.panel {
+  padding: 20px;
+  border-color: #0a58ca;
+  border-radius: 25px;
+  border-width: 5px;
+}
+
+.list-panel{
+  align-content: center;
+  position: relative;
+  padding: 10px;
+
+}
+
+.prod {
+  padding: 10px;
+  width: 80%;
+  border-radius: 25px;
+
+}

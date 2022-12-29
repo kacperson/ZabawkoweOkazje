@@ -1,110 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends 'base.html' %}
 
-  <head>
-
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <link rel="preconnect" href="https://fonts.gstatic.com">
-
-    <title>Zabawkowe Okazje</title>
-
-    <!-- Bootstrap core CSS -->
-    <link href="../static/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-
-
-    <!-- Additional CSS Files -->
-    <link rel="stylesheet" href="../static/css/style.css">
-    <link rel="stylesheet" href="../static/css/list.css">
-    <link rel="stylesheet" href="../static/css/owl.css">
-
-    <style>
-        #mytable {
-            text-align: center;
-            margin: auto;
-            display: none;
-        }
-
-.button-7 {
-  background-color: #0095ff;
-  border: 1px solid transparent;
-  border-radius: 3px;
-  box-shadow: rgba(255, 255, 255, .4) 0 1px 0 0 inset;
-  box-sizing: border-box;
-  color: #fff;
-  cursor: pointer;
-  display: inline-block;
-  font-family: -apple-system,system-ui,"Segoe UI","Liberation Sans",sans-serif;
-  font-size: 13px;
-  font-weight: 400;
-  line-height: 1.15385;
-  margin: 2px;
-  outline: none;
-  padding: 8px .8em;
-    width: 100%;
-  text-align: center;
-  text-decoration: none;
-  user-select: none;
-  -webkit-user-select: none;
-  touch-action: manipulation;
-  vertical-align: baseline;
-  white-space: nowrap;
-}
-
-.button-7:hover,
-.button-7:focus {
-  background-color: #07c;
-}
-
-.button-7:focus {
-  box-shadow: 0 0 0 4px rgba(0, 149, 255, .15);
-}
-
-.button-7:active {
-  background-color: #0064bd;
-  box-shadow: none;
-}
-    </style>
-
-
-</head>
-
-<body>
-
-<!-- ***** Preloader ***** -->
-<div class="lds-ripple"><div></div><div></div></div>
-
-<!-- ***** Header Area  ***** -->
-  <header class="header-area header-sticky wow slideInDown" data-wow-duration="0.75s" data-wow-delay="0s">
-    <div class="container">
-      <div class="row">
-        <div class="col-12">
-          <nav class="main-nav">
-            <!-- ***** Logo ***** -->
-            <a href="index.html" class="logo">
-              <h1><img src="../static/image/logo-icon.png" alt=""></h1>
-            </a>
-
-            <!-- ***** Menu ***** -->
-            <ul class="nav">
-              <li class="scroll-to-section"><a href="#top" class="active">Home</a></li>
-              <li class="scroll-to-section"><a href="#features">Features</a></li>
-              <li class="scroll-to-section"><a href="#about">About Us</a></li>
-              <li><a href="#list">List</a></li>
-              <li class="scroll-to-section"><a href="#contact">Contact Us</a></li>
-              <li><div class="cart-button">
-                <i href="#cart" class="fa-solid fa-cart-shopping fa-fw" ></i>
-              </div></li>
-            </ul>
-
-          </nav>
-        </div>
-      </div>
-    </div>
-  </header>
-
+{% block content %}
     <main>
         <div class="search text-center">
             <div class="container">
@@ -124,68 +20,11 @@
                   </form>
 
                 </div>
-                <div class="center" id="mytable">
-                    <p>Wybierz jedną z opcji (widocznych za kilka sekund):</p>
-                      <table class="tb" id="list">
-                        <tbody>
-                            <tr>
-                                <td>
-                                    <button class="button-7" role="button" id="1" onclick="show_toy(this.id)">
-                                    </button>
-                                </td>
-                                <td>
-                                    <button class="button-7" role="button" id="2" onclick="show_toy(this.id)"></button>
 
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <button class="button-7" role="button" id="3" onclick="show_toy(this.id)"></button>
-
-                                </td>
-                                <td>
-                                    <button class="button-7" role="button" id="4" onclick="show_toy(this.id)"></button>
-
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <button class="button-7" role="button" id="5" onclick="show_toy(this.id)"></button>
-
-                                </td>
-                                <td>
-                                    <button class="button-7" role="button" id="6" onclick="show_toy(this.id)"></button>
-
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <button class="button-7" role="button" id="7" onclick="show_toy(this.id)"></button>
-
-                                </td>
-                                <td>
-                                    <button class="button-7" role="button" id="8" onclick="show_toy(this.id)"></button>
-
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <button class="button-7" role="button" id="9" onclick="show_toy(this.id)"></button>
-
-                                </td>
-                                <td>
-                                    <button class="button-7" role="button" id="10" onclick="show_toy(this.id)"></button>
-
-                                </td>
-                            </tr>
-
-                        </tbody>
-                    </table>
-                  </div>
             </div>
         </div>
 
-        <div class="container main">
+        <div class="container main list" id="list">
             <div class="col-md-3">
                 <section class="panel">
                     <header class="panel-heading">
@@ -205,12 +44,71 @@
                 </section>
             </div>
 
-            <div class="col-md-9 list">
+            <div class="list-panel">
+                <div align="center" id="mytable">
+                    <h4>Wybierz jedną z opcji:</h4>
+                      <table class="tb">
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <button class="btn-primary" role="button" id="1" onclick="show_toy(this.id)">
+                                    </button>
+                                </td>
+                                <td>
+                                    <button class="btn-primary" role="button" id="2" onclick="show_toy(this.id)"></button>
 
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <button class="btn-primary" role="button" id="3" onclick="show_toy(this.id)"></button>
+
+                                </td>
+                                <td>
+                                    <button class="btn-primary" role="button" id="4" onclick="show_toy(this.id)"></button>
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <button class="btn-primary" role="button" id="5" onclick="show_toy(this.id)"></button>
+
+                                </td>
+                                <td>
+                                    <button class="btn-primary" role="button" id="6" onclick="show_toy(this.id)"></button>
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <button class="btn-primary" role="button" id="7" onclick="show_toy(this.id)"></button>
+
+                                </td>
+                                <td>
+                                    <button class="btn-primary" role="button" id="8" onclick="show_toy(this.id)"></button>
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <button class="btn-primary" role="button" id="9" onclick="show_toy(this.id)"></button>
+
+                                </td>
+                                <td>
+                                    <button class="btn-primary" role="button" id="10" onclick="show_toy(this.id)"></button>
+
+                                </td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                  </div>
             </div>
         </div>
     </main>
-</body>
+{% endblock %}
+
+{% block scripts %}
 
 <script src="https://kit.fontawesome.com/05a09beaf0.js" crossorigin="anonymous"></script>
 <script src="../static/js/extention/choices.js"></script>
@@ -236,7 +134,7 @@
       }
       function displayList(){
 
-          var mydiv = document.getElementById("mytable");
+          var mydiv = document.getElementById("list");
           mydiv.style.display = "block";
           const params = {params: document.getElementById("choices-text-preset-values").value};
           fetch('http://127.0.0.1:5000/ceneo', {
@@ -266,4 +164,4 @@
 
 
     </script>
-</html>
+{% endblock %}
