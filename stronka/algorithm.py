@@ -56,15 +56,16 @@ class SortingAlgorithm:
         #print(json.dumps(DataTFS,indent=2))
         
         ### the lowest price
-        DataTLP = {}
+
         self.resetSearched()
         self.agregateBy("name")
+
         tempList = [[item["id"] for item in self.productsInBlocks[name]] for name in self.productsInBlocks]
-        print(tempList)
         combinationsOfItems = list(itertools.product(*tempList))
-        print(combinationsOfItems)
-        tempDict = {}
+
+        DataTLP = {}
         listOfVendors = []
+
         for combination in combinationsOfItems:
             fullPrice = 0
             for itemId in combination:
@@ -72,10 +73,10 @@ class SortingAlgorithm:
                 if not self.products[itemId]["vendor"] in listOfVendors:
                     listOfVendors.append(self.products[itemId]["vendor"])
                     fullPrice += self.products[itemId]["delivery price"]
-            tempDict[combination] = fullPrice
-        tempDict = sorted(tempDict.items(), key=lambda x:x[1])
-        print(tempDict[0])
+            DataTLP[combination] = fullPrice
+        DataTLP = sorted(DataTLP.items(), key=lambda x:x[1])
         
+        return DataTFS, DataTLP
 
 if __name__ == "__main__":
 
