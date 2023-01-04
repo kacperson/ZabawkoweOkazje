@@ -11,7 +11,7 @@
                       <div class="inner-form">
                         <div class="input-field">
                           <input class="form-control" id="choices-text-preset-values" type="text" placeholder="Type to search..." />
-                          <button class="btn-search" type="button" onclick="displayList()">
+                          <button class="btn-search" type="button" onclick="loadTable()">
                             <i class="fa-solid fa-magnifying-glass"></i>
                           </button>
                         </div>
@@ -112,6 +112,7 @@
 
 <script src="https://kit.fontawesome.com/05a09beaf0.js" crossorigin="anonymous"></script>
 <script src="../static/js/extention/choices.js"></script>
+<script src="../static/js/list.js"></script>
     <script>
       var textPresetVal = new Choices('#choices-text-preset-values',
       {
@@ -119,48 +120,28 @@
       });
 
 
-      function show_json(json){
-
-          document.getElementById("1").innerHTML = json.jeden;
-          document.getElementById("2").innerHTML = json.dwa;
-          document.getElementById("3").innerHTML = json.trzy;
-          document.getElementById("4").innerHTML = json.cztery;
-          document.getElementById("5").innerHTML = json.pięć;
-          document.getElementById("6").innerHTML = json.sześć;
-          document.getElementById("7").innerHTML = json.siedem;
-          document.getElementById("8").innerHTML = json.osiem;
-          document.getElementById("9").innerHTML = json.dziewięć;
-          document.getElementById("10").innerHTML = json.dziesięć;
-      }
       function displayList(){
-
-          var mydiv = document.getElementById("list");
-          mydiv.style.display = "block";
-          const params = {params: document.getElementById("choices-text-preset-values").value};
-          fetch('http://127.0.0.1:5000/ceneo', {
+          var myarr = document.getElementById("choices-text-preset-values").value.split(",");
+          if(myarr.length>10){
+              alert("Proszę wybrać do 10 produktów")
+          }else{
+              var mydiv = document.getElementById("list");
+              mydiv.style.display = "block";
+              const params = {params: document.getElementById("choices-text-preset-values").value};
+              fetch('http://127.0.0.1:5000/ceneo', {
               method: 'POST', headers: {"Content-Type":
               'application/json'}, body: JSON.stringify(params),
               }).then((response) => response.json().then((mydict) => {
                  console.log(mydict);
-                 show_json(mydict);
-          }
-              )).catch((error) => {console.log(error)});
-      }
 
-      function show_toy(clicked_id){
-          alert(clicked_id);
-          const params = {params: document.getElementById("choices-text-preset-values").value,
-          number: clicked_id};
-        fetch('http://127.0.0.1:5000/show_choice', {
-              method: 'POST', headers: {"Content-Type":
-              'application/json'}, body: JSON.stringify(params),
-              }).then((response) => response.json().then((d1) => {
-                 console.log(d1);
-                 alert(JSON.stringify(d1));
-          }
+              }
               )).catch((error) => {console.log(error)});
+          }
+
 
       }
+
+
 
 
     </script>

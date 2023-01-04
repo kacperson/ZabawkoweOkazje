@@ -32,8 +32,8 @@ class Ceneo:
                 lista = []
                 element = self.driver.find_element(By.CLASS_NAME, "dropdown-wrapper")
                 self.driver.execute_script("arguments[0].click()", element)
-                element = self.driver.find_element(By.XPATH,
-                                                   '//*[@id="body"]/div/div/div[3]/div/section/div[2]/div[2]/div/div/a[2]')
+                #element = self.driver.find_element(By.XPATH,
+                 #                                  '//*[@id="body"]/div/div/div[3]/div/section/div[2]/div[2]/div/div/a[2]')
                 self.driver.execute_script("arguments[0].click()", element)
                 self.driver.implicitly_wait(1)  # seconds
                 lista_propozycji = self.driver.find_element(By.CLASS_NAME, "js_search-results")
@@ -64,45 +64,46 @@ class Ceneo:
                 #print("PRODUKT NIEJEDNOZNACZNY WYBIERZ")
                 lista = []
                 element = self.driver.find_element(By.CLASS_NAME, "dropdown-wrapper")
+                #self.driver.execute_script("arguments[0].click()", element)
+                #element = self.driver.find_element(By.XPATH, '//*[@id="body"]/div/div/div[3]/div/section/div[2]/div[2]/div/div/a[2]')
                 self.driver.execute_script("arguments[0].click()", element)
-                element = self.driver.find_element(By.XPATH, '//*[@id="body"]/div/div/div[3]/div/section/div[2]/div[2]/div/div/a[2]')
-                self.driver.execute_script("arguments[0].click()", element)
-                self.driver.implicitly_wait(1)  # seconds
+                self.driver.implicitly_wait(10)  # seconds
                 lista_propozycji = self.driver.find_element(By.CLASS_NAME, "js_search-results")
                 ilosc = len(lista_propozycji.find_elements(By.XPATH, './div'))
 
                 if ilosc > 11:
                     ilosc = 11
                 for i in range (0, ilosc-1):
-                    #print(f'{i+1}. ',lista_propozycji.find_element(By.XPATH, f'./div[@data-position="{i}"]').get_attribute('data-productname'))
+
                     lista.append(lista_propozycji.find_element(By.XPATH, f'./div[@data-position="{i}"]').get_attribute('data-productname'))
-                    #self.mydict[i] = lista_propozycji.find_element(By.XPATH, f'./div[@data-position="{i}"]').get_attribute('data-productname')
-                #print(lista)
-                numer = number
-                if lista_propozycji.find_element(By.XPATH, f'./div[@data-position="{numer-1}"]/div/div[2]/div[2]/div[1]/a[1]').text.lower() == 'idź do sklepu':
-                    attributes = {"id": id}
-                    attributes["nazwa"] = lista_propozycji.find_element(By.XPATH, f'./div[@data-position="{i}"]').get_attribute('data-productname')
-                    sklep = lista_propozycji.find_element(By.XPATH, f'./div[@data-position="{numer-1}"]')
-                    attributes["cena"] = float(sklep.get_attribute('data-price').replace(',','.'))
-                    attributes["cena dostawy"] = "BRAK INFORMACJI"
-                    attributes["sklep"] = sklep.get_attribute('data-shopurl').replace('https://', '', 1).replace('http://', '', 1)
-                    linkv1 = sklep.find_element(By.CLASS_NAME, 'go-to-shop').get_attribute('href')
-                    try:
-                        attributes["link"] = pyshorteners.Shortener().tinyurl.short(linkv1)
-                    except:
-                        pass
-                    products.append(attributes)
-                else:
-                    element = lista_propozycji.find_element(By.XPATH, f'./div[@data-position="{numer-1}"]/div/div[2]/div[2]/a[1]')
-                    self.driver.execute_script("arguments[0].click()", element)
-                    products.append(self.raporcik(ajdi=id))
+                ##
+                    if lista_propozycji.find_element(By.XPATH,
+                                                     f'./div[@data-position="{i}"]/div/div[2]/div[2]/div[1]/a[1]').text.lower() == 'idź do sklepu':
+                        attributes = {"id": i + 1}
+                        attributes["nazwa"] = lista_propozycji.find_element(By.XPATH,
+                                                                            f'./div[@data-position="{i}"]').get_attribute(
+                            'data-productname')
+                        sklep = lista_propozycji.find_element(By.XPATH, f'./div[@data-position="{i}"]')
+                        attributes["cena"] = float(sklep.get_attribute('data-price').replace(',', '.'))
+                        attributes["cena dostawy"] = "BRAK INFORMACJI"
+                        attributes["sklep"] = sklep.get_attribute('data-shopurl').replace('https://', '', 1).replace(
+                            'http://', '', 1)
+                        linkv1 = sklep.find_element(By.CLASS_NAME, 'go-to-shop').get_attribute('href')
+                        try:
+                            attributes["link"] = pyshorteners.Shortener().tinyurl.short(linkv1)
+                        except:
+                            pass
+                        products.append(attributes)
+                    else:
+                        element = lista_propozycji.find_element(By.XPATH,
+                                                                f'./div[@data-position="{i}"]/div/div[2]/div[2]/a[1]')
+                        self.driver.execute_script("arguments[0].click()", element)
+                        products.append(self.raporcik(ajdi=i))
             else:
                 products.append(self.raporcik(ajdi=id))
-
-        #print(attributes)
-        #print(products)
+        print(products)
         return products
-        #return attributes
+
 
     def raporcik(self, ajdi):
         attributes = {"id": ajdi}
