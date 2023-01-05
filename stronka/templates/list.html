@@ -11,7 +11,7 @@
                       <div class="inner-form">
                         <div class="input-field">
                           <input class="form-control" id="choices-text-preset-values" type="text" placeholder="Type to search..." />
-                          <button class="btn-search" type="button" onclick="loadTable()">
+                          <button class="btn-search" type="button" onclick="displayList()">
                             <i class="fa-solid fa-magnifying-glass"></i>
                           </button>
                         </div>
@@ -44,64 +44,10 @@
                 </section>
             </div>
 
-            <div class="list-panel">
+            <div class="list-panel", id="centered">
                 <div align="center" id="mytable">
                     <h4>Wybierz jedną z opcji:</h4>
-                      <table class="tb">
-                        <tbody>
-                            <tr>
-                                <td>
-                                    <button class="btn-primary" role="button" id="1" onclick="show_toy(this.id)">
-                                    </button>
-                                </td>
-                                <td>
-                                    <button class="btn-primary" role="button" id="2" onclick="show_toy(this.id)"></button>
 
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <button class="btn-primary" role="button" id="3" onclick="show_toy(this.id)"></button>
-
-                                </td>
-                                <td>
-                                    <button class="btn-primary" role="button" id="4" onclick="show_toy(this.id)"></button>
-
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <button class="btn-primary" role="button" id="5" onclick="show_toy(this.id)"></button>
-
-                                </td>
-                                <td>
-                                    <button class="btn-primary" role="button" id="6" onclick="show_toy(this.id)"></button>
-
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <button class="btn-primary" role="button" id="7" onclick="show_toy(this.id)"></button>
-
-                                </td>
-                                <td>
-                                    <button class="btn-primary" role="button" id="8" onclick="show_toy(this.id)"></button>
-
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <button class="btn-primary" role="button" id="9" onclick="show_toy(this.id)"></button>
-
-                                </td>
-                                <td>
-                                    <button class="btn-primary" role="button" id="10" onclick="show_toy(this.id)"></button>
-
-                                </td>
-                            </tr>
-
-                        </tbody>
-                    </table>
                   </div>
             </div>
         </div>
@@ -112,13 +58,39 @@
 
 <script src="https://kit.fontawesome.com/05a09beaf0.js" crossorigin="anonymous"></script>
 <script src="../static/js/extention/choices.js"></script>
-<script src="../static/js/list.js"></script>
+<script src=
+"https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js">
+    </script>
     <script>
       var textPresetVal = new Choices('#choices-text-preset-values',
       {
         removeItemButton: true,
       });
 
+      function createTable(rows) {
+          var table = document.createElement('table');
+          table.setAttribute("id", "table");
+          //table.setAttribute("class", "list-panel");
+          var tbody = document.createElement('tbody');
+
+          for (var i = 0; i < rows; i++) {
+            var tr = document.createElement('tr');
+            var td = document.createElement('td');
+            var button = document.createElement('button');
+            button.className = 'btn-primary';
+            button.setAttribute('role', 'button');
+            button.id = (i+1).toString();
+            button.onclick = function() {
+                show_toy(this.id);
+            };
+            td.appendChild(button);
+            tr.appendChild(td);
+            tbody.appendChild(tr);
+          }
+
+          table.appendChild(tbody);
+          document.getElementById("centered").appendChild(table);
+        }
 
       function displayList(){
           var myarr = document.getElementById("choices-text-preset-values").value.split(",");
@@ -133,6 +105,9 @@
               'application/json'}, body: JSON.stringify(params),
               }).then((response) => response.json().then((mydict) => {
                  console.log(mydict);
+                 deleteExisting();
+                 createTable(Object.keys(mydict).length);
+                 show_json(mydict);
 
               }
               )).catch((error) => {console.log(error)});
@@ -140,6 +115,39 @@
 
 
       }
+
+      function show_json(json){
+
+          document.getElementById("1").innerHTML = json.jeden;
+          document.getElementById("2").innerHTML = json.dwa;
+          document.getElementById("3").innerHTML = json.trzy;
+          document.getElementById("4").innerHTML = json.cztery;
+          document.getElementById("5").innerHTML = json.pięć;
+          document.getElementById("6").innerHTML = json.sześć;
+          document.getElementById("7").innerHTML = json.siedem;
+          document.getElementById("8").innerHTML = json.osiem;
+          document.getElementById("9").innerHTML = json.dziewięć;
+          document.getElementById("10").innerHTML = json.dziesięć;
+      }
+
+      function show_toy(clicked_id){
+          alert(clicked_id);
+          const params = {params: document.getElementById("choices-text-preset-values").value,
+          number: clicked_id};
+        fetch('http://127.0.0.1:5000/show_choice', {
+              method: 'POST', headers: {"Content-Type":
+              'application/json'}, body: JSON.stringify(params),
+              }).then((response) => response.json().then((d1) => {
+                 console.log(d1);
+                 alert(JSON.stringify(d1));
+          }
+              )).catch((error) => {console.log(error)});
+
+      }
+      function deleteExisting() {
+            $("#table").remove();
+
+        }
 
 
 

@@ -76,20 +76,12 @@ def get_ceneo():
     driver.maximize_window()
     bot = Ceneo(driver)
     bot.odpalenie_strony()
-    output = bot.wyszukiwanie(lista1, 1)
-    test = [{"pierwszy": "aaa", "drugi": "bbb"}];
-    d1 = {}
-    for i in output:
-        d1.update(i)
-    print(d1)
-    return output
+    output = bot.zwrocenie_listy(lista1)
+    lista2 = ["jeden", "dwa", "trzy", "cztery", "pięć", "sześć", "siedem", "osiem", "dziewięć", "dziesięć"]
+    zipped = dict(zip(lista2, output))
+    print(zipped)
 
-    #output = bot.zwrocenie_listy(lista1)
-    #lista2 = ["jeden", "dwa", "trzy", "cztery", "pięć", "sześć", "siedem", "osiem", "dziewięć", "dziesięć"]
-    #zipped = dict(zip(lista2, output))
-    #print(zipped)
-
-    #return jsonify(zipped)
+    return jsonify(zipped)
 
 @app.route('/show_choice', methods=['POST'])
 def show_choice():
@@ -106,7 +98,7 @@ def show_choice():
     driver.maximize_window()
     bot = Ceneo(driver)
     bot.odpalenie_strony()
-    output = bot.wyszukiwanie(lista1, 3)
+    output = bot.wyszukiwanie(lista1, int(number))
     d1={}
     for i in output:
         d1.update(i)

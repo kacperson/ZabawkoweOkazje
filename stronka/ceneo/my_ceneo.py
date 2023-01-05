@@ -77,30 +77,31 @@ class Ceneo:
 
                     lista.append(lista_propozycji.find_element(By.XPATH, f'./div[@data-position="{i}"]').get_attribute('data-productname'))
                 ##
-                    if lista_propozycji.find_element(By.XPATH,
-                                                     f'./div[@data-position="{i}"]/div/div[2]/div[2]/div[1]/a[1]').text.lower() == 'idź do sklepu':
-                        attributes = {"id": i + 1}
-                        attributes["nazwa"] = lista_propozycji.find_element(By.XPATH,
-                                                                            f'./div[@data-position="{i}"]').get_attribute(
-                            'data-productname')
-                        sklep = lista_propozycji.find_element(By.XPATH, f'./div[@data-position="{i}"]')
-                        attributes["cena"] = float(sklep.get_attribute('data-price').replace(',', '.'))
-                        attributes["cena dostawy"] = "BRAK INFORMACJI"
-                        attributes["sklep"] = sklep.get_attribute('data-shopurl').replace('https://', '', 1).replace(
-                            'http://', '', 1)
-                        linkv1 = sklep.find_element(By.CLASS_NAME, 'go-to-shop').get_attribute('href')
-                        try:
-                            attributes["link"] = pyshorteners.Shortener().tinyurl.short(linkv1)
-                        except:
-                            pass
-                        products.append(attributes)
-                    else:
-                        element = lista_propozycji.find_element(By.XPATH,
-                                                                f'./div[@data-position="{i}"]/div/div[2]/div[2]/a[1]')
-                        self.driver.execute_script("arguments[0].click()", element)
-                        products.append(self.raporcik(ajdi=i))
+                if lista_propozycji.find_element(By.XPATH,
+                                                 f'./div[@data-position="{number-1}"]/div/div[2]/div[2]/div[1]/a[1]').text.lower() == 'idź do sklepu':
+                    attributes = {"id": id}
+                    attributes["nazwa"] = lista_propozycji.find_element(By.XPATH,
+                                                                        f'./div[@data-position="{number-1}"]').get_attribute(
+                        'data-productname')
+                    sklep = lista_propozycji.find_element(By.XPATH, f'./div[@data-position="{number-1}"]')
+                    attributes["cena"] = float(sklep.get_attribute('data-price').replace(',', '.'))
+                    attributes["cena dostawy"] = "BRAK INFORMACJI"
+                    attributes["sklep"] = sklep.get_attribute('data-shopurl').replace('https://', '', 1).replace(
+                        'http://', '', 1)
+                    linkv1 = sklep.find_element(By.CLASS_NAME, 'go-to-shop').get_attribute('href')
+                    try:
+                        attributes["link"] = pyshorteners.Shortener().tinyurl.short(linkv1)
+                    except:
+                        pass
+                    products.append(attributes)
+                else:
+                    element = lista_propozycji.find_element(By.XPATH,
+                                                            f'./div[@data-position="{number-1}"]/div/div[2]/div[2]/a[1]')
+                    self.driver.execute_script("arguments[0].click()", element)
+                    products.append(self.raporcik(ajdi=id))
             else:
                 products.append(self.raporcik(ajdi=id))
+
         print(products)
         return products
 
