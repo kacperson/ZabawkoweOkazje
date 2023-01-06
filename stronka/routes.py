@@ -68,7 +68,6 @@ def get_ceneo():
     params = request.get_json()["params"]
     lista1 = []
     lista1.append(params)
-
     freeze_support()
     options = Options()
     options.add_argument("--headless")
