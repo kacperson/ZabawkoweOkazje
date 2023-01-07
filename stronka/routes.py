@@ -88,28 +88,6 @@ def get_ceneo():
     zwrot['nieznalezione'] = propozycje
     return zwrot
 
-@app.route('/show_choice', methods=['POST'])
-def show_choice():
-    params = request.get_json()["params"]
-    number = request.get_json()["number"]
-    lista1 = []
-    lista1.append(params)
-    print(params)
-    print(number)
-    freeze_support()
-    options = Options()
-    options.add_argument("--headless")
-    driver = uc.Chrome(options=options)
-    driver.maximize_window()
-    bot = Ceneo(driver)
-    bot.odpalenie_strony()
-    output = bot.wyszukiwanie(lista1, int(number))
-    d1={}
-    for i in output:
-        d1.update(i)
-    print(d1)
-    return d1
-
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 

@@ -52,11 +52,7 @@
                 </section>
             </div>
 
-            <div class="list-panel", id="centered">
-                <div align="center" id="mytable">
-                    <h4>Wybierz jedną z opcji:</h4>
-
-                  </div>
+            <div class="list-panel" id="centered">
             </div>
         </div>
     </main>
@@ -108,22 +104,6 @@
       {
         removeItemButton: true,
       });
-
-
-      function show_json(json){
-
-          document.getElementById("1").innerHTML = json.num1;
-          document.getElementById("1").innerHTML = json.num1;
-          document.getElementById("2").innerHTML = json.num2;
-          document.getElementById("3").innerHTML = json.num3;
-          document.getElementById("4").innerHTML = json.num4;
-          document.getElementById("5").innerHTML = json.num5;
-          document.getElementById("6").innerHTML = json.num6;
-          document.getElementById("7").innerHTML = json.num7;
-          document.getElementById("8").innerHTML = json.num8;
-          document.getElementById("9").innerHTML = json.num9;
-          document.getElementById("10").innerHTML = json.num10;
-      }
 
       function robienietabeli(items){
            let table = document.createElement('table');
@@ -192,16 +172,17 @@
           var table = document.createElement('table');
           table.setAttribute("id", "table");
           var tbody = document.createElement('tbody');
-
-          for (var i = 0; i < rows-1; i++) {
+          for (var i = 0; i < rows-1; i=i+2) {
             var tr = document.createElement('tr');
             var td = document.createElement('td');
             var button = document.createElement('button');
             button.className = 'btn-primary';
             button.setAttribute('role', 'button');
             button.id = (i+1).toString();
-            const key = `num${i+1}`
-            button.innerHTML = json[key];
+            const key = `num${i+1}`;
+            const img = `num${i}`;
+            button.setAttribute('nazwa', json[key])
+            button.innerHTML = `<img src="${json[img]}">` + `<br>` + json[key];
             button.onclick = function() {
                 searchv2(this.id);
             };
@@ -217,7 +198,7 @@
       function search(){
           var mydiv = document.getElementById("list");
           mydiv.style.display = "block";
-          const params = {params: document.getElementById("choices-text-preset-values").value};
+          let params = {params: document.getElementById("choices-text-preset-values").value};
           fetch('/ceneo', {
             method: 'POST',
             headers: {
@@ -229,25 +210,43 @@
           })
           .then(response => response.json())
           .then(lista => {
+              params = params["params"].split(",")
               if (lista['znalezione'] != undefined) {
                   for (let i = 0; i <= lista['znalezione'].length; i++) {
                       if (lista['znalezione'][i] != undefined)
-                        products.push(lista['znalezione'][i])
+                          products.push(lista['znalezione'][i])
                   }
               }
-              for (let i = 0; i <= lista['nieznalezione'].length; i++) {
-                  var xd = lista['nieznalezione'][i]
-                  if (xd == undefined) {
-                      robienietabeli(products);
-                  } else {
-                      createTable(Object.keys(xd).length, xd);
-                  }
-              }
+              if (lista['nieznalezione'] != undefined) {
+                  for (let hwdp = 0; hwdp < params.length; hwdp++) {
+                      console.log(lista['nieznalezione'][params[hwdp]])
+                      if (lista['nieznalezione'][params[hwdp]] != undefined) {
+                          createname(params[hwdp]);
+                          console.log(lista['nieznalezione'][params[hwdp]][0])
+                              console.log('gowno1')
+                              var xd = lista['nieznalezione'][params[hwdp]]
+                              if (xd == undefined) {
+                                  robienietabeli(products);
+                              } else {
+                                  createTable(Object.keys(xd).length, xd);
+                              }
+                              }
+                          }
+                      }
           });
         }
 
+      function createname(stringi){
+          var xd = document.createElement('div')
+          xd.setAttribute("align", "center")
+          xd.setAttribute("id", "mytable")
+          var xd2 = document.createElement('h4')
+          xd2.innerHTML = `Wybierz jedną z opcji, ponieważ hasło ${stringi} nie jest wystarczające`
+          xd.appendChild(xd2)
+          document.getElementById("centered").appendChild(xd);
+      }
       function searchv2(clicked_id){
-          const params2 = {params: document.getElementById(clicked_id).innerHTML};
+          const params2 = {params: document.getElementById(clicked_id).getAttribute('nazwa')};
           deleteExisting()
           fetch('/ceneo', {
                 method: 'POST',
@@ -268,17 +267,23 @@
                       }
                   }
               }
-                  var xd = lista['nieznalezione'][0]
-                  if( xd == undefined){
-                  robienietabeli(algorytm(products));
+                  if (lista['nieznalezione'] != undefined) {
+                  for (let i = 0; i <= lista['nieznalezione'].length; i++) {
+                      document.getElementById("centered").appendChild(table);
+                      for (let j = 0; j <= lista['nieznalezione'][i].length; j++) {
+                          var xd = lista['nieznalezione'][i][j]
+                          if (xd == undefined) {
+                              robienietabeli(products);
+                          } else {
+                              createTable(Object.keys(xd).length, xd);
+                          }
+                      }
                   }
-                  else {
-                      deleteExisting();
-                      createTable(Object.keys(xd).length, xd);
-                  }
+              }
               });
       }
     function deleteExisting() {
+            $("#mytable").remove();
             $("#table").remove();
         }
 

@@ -4,7 +4,7 @@ from stronka.ceneo.my_ceneo import Ceneo
 
 
 def ceneo_scrapper(list):
-    listy_propozycji = []
+    listy_propozycji = {}
     produkty = []
     options = Options()
     driver = webdriver.Chrome(executable_path="chromedriver.exe", options=options)
@@ -28,7 +28,7 @@ def ceneo_scrapper(list):
             for j in range(0, len(xd)):
                 lista_numer.append(f'num{str(j)}')
             zipped = dict(zip(lista_numer, xd))
-            listy_propozycji.append(zipped)
+            listy_propozycji[f'{list[i]}'] = zipped
         else:
             tab = bot.raporcik()
             for i, slownik in enumerate(tab):
