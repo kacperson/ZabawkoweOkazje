@@ -1,8 +1,8 @@
 from flask import render_template, redirect, url_for, flash, request, jsonify
-from flask_login import login_user, logout_user
+from flask_login import login_user, logout_user, current_user
 from stronka import app
 from stronka.forms import RegisterForm, LoginForm
-from stronka.models import User
+from stronka.models import User, SearchHistory
 from stronka import db
 from stronka.ceneo.main import ceneo_scrapper
 from stronka.ceneo.my_ceneo import Ceneo
@@ -18,7 +18,7 @@ def home_page():
     return render_template('index.html')
 
 
-@app.route('/list')
+@app.route('/list', methods=['POST', 'GET'])
 def list_page():
     return render_template('list.html')
 
@@ -104,5 +104,8 @@ def show_choice():
     print(d1)
     return d1
 
+@app.route('/profile', methods=["GET","POST"])
+def show_history():
+    history = SearchHistory.query.filter_by(user_id=current_user.id)
 
-
+    return render_template('profile.html', history=history)
