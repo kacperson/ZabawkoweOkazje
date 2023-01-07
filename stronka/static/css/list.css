@@ -533,6 +533,10 @@ legend {
   align-items: center;
 }
 
+.s004 #wpisz {
+  color: #eeeeee;
+  margin-top: -50px;
+}
 .s004 form .inner-form .input-field .btn-search svg {
   fill: #333;
   width: 40px;
@@ -650,3 +654,19 @@ legend {
 
 }
 
+.dropzone {
+  margin: 10px;
+  border-radius: 25px;
+}
+
+#guzikplik {
+  border-radius: 15px;
+  padding: 10px;
+  border-color: #B8C0FF;
+}
+
+#guzikzamiany {
+  border-radius: 15px;
+  padding: 10px;
+  background-color: #eeeeee;
+}
