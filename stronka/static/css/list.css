@@ -513,6 +513,26 @@ legend {
   align-items: center;
 }
 
+.s004 form .inner-form .input-field .btn-upload {
+  width: 70px;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-align: center;
+      align-items: center;
+  position: absolute;
+  right: 80px;
+  top: 0;
+  height: 100%;
+  background: transparent;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  display: flex;
+  -ms-flex-pack: center;
+      justify-content: center;
+  align-items: center;
+}
+
 .s004 form .inner-form .input-field .btn-search svg {
   fill: #333;
   width: 40px;
