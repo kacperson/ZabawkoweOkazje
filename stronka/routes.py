@@ -1,5 +1,12 @@
-from flask import render_template, redirect, url_for, flash, request, jsonify
+import os
+
+from random import random
+
+import flask_login
+from flask import render_template, redirect, url_for, flash, request, jsonify, abort
 from flask_login import login_user, logout_user
+from werkzeug.utils import secure_filename
+
 from stronka import app
 from stronka.forms import RegisterForm, LoginForm
 from stronka.models import User
@@ -11,6 +18,9 @@ from selenium.webdriver.chrome.options import Options
 from multiprocessing import freeze_support
 
 
+UPLOAD_FOLDER = 'stronka/static/uploads'
+ALLOWED_EXTENSIONS = set(['txt'])
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 @app.route('/')
 @app.route('/home')
@@ -20,8 +30,7 @@ def home_page():
 
 @app.route('/list')
 def list_page():
-    return render_template('list.html')
-
+    return render_template('list.html',)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login_page():
@@ -66,23 +75,20 @@ def logout_page():
 @app.route('/ceneo', methods=['POST'])
 def get_ceneo():
     params = request.get_json()["params"]
-    lista1 = []
-    lista1.append(params)
-
-    freeze_support()
-    options = Options()
-    options.add_argument("--headless")
-    driver = uc.Chrome(options=options)
-    driver.maximize_window()
-    bot = Ceneo(driver)
-    bot.odpalenie_strony()
-    output = bot.zwrocenie_listy(lista1)
     print(params)
+    if params != None:
+        lista = params.split(",")
+    else:
+        my_file = open("stronka/static/uploads/xd.txt", "r")
+        data = my_file.read()
+        lista = data.split("\n")
+        my_file.close()
+    x = ceneo_scrapper(lista)
+    """print(params)
     lista2 = ["jeden", "dwa", "trzy", "cztery", "pięć", "sześć", "siedem", "osiem", "dziewięć", "dziesięć"]
     zipped = dict(zip(lista2, output))
-    print(zipped)
-
-    return jsonify(zipped)
+    print(zipped)"""
+    return x
 
 @app.route('/show_choice', methods=['POST'])
 def show_choice():
@@ -106,5 +112,22 @@ def show_choice():
     print(d1)
     return d1
 
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
+def file_exist(filename):
+    return os.path.exists(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+
+@app.route("/upload", methods=["POST", "GET"])
+def upload():
+    if request.method == 'POST':
+        file = request.files['file']
+        filename = secure_filename(file.filename)
+        """while (True):
+            if file_exist(filename):
+                print(filename)
+                filename = f'{flask_login.current_user + xd}.txt'
+            else:
+                file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+                break"""
 

@@ -8,19 +8,28 @@
                   <form>
                     <fieldset>
                       <legend>CZEGO SZUKASZ?</legend>
-                      <div class="inner-form">
+                      <button type="button" id="guzikzamiany" onclick="zmiana();">Plik</button>
+                      <div class="dropzone" id="plik" hidden>
+                        <div class="dz-message needsclick">
+                            <h1>Upuść pliki tutaj lub kliknij, aby przesłać.</h1>
+                        </div>
+                      </div>
+                      <div>
+                        <button type="button" id="guzikplik" hidden onclick="searchbyfile()">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </button>
+                      </div>
+                      <div class="inner-form" id="tekst">
                         <div class="input-field">
                           <input class="form-control" id="choices-text-preset-values" type="text" placeholder="Type to search..." />
-                          <button class="btn-search" type="button" onclick="displayList()">
+                          <button class="btn-search" type="button" onclick="search()">
                             <i class="fa-solid fa-magnifying-glass"></i>
                           </button>
                         </div>
                       </div>
                     </fieldset>
                   </form>
-
                 </div>
-
             </div>
         </div>
 
@@ -39,7 +48,6 @@
                 </section>
                 <section class="panel">
                     <header class="panel-heading">
-
                     </header>
                 </section>
             </div>
@@ -112,7 +120,41 @@
 
 <script src="https://kit.fontawesome.com/05a09beaf0.js" crossorigin="anonymous"></script>
 <script src="../static/js/extention/choices.js"></script>
-    <script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<script src="https://unpkg.com/dropzone@5/dist/min/dropzone.min.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/dropzone@5/dist/min/dropzone.min.css" type="text/css" />
+<script>
+    $(document).ready(function(){
+        $(".dropzone").dropzone({
+          url: '/upload',
+          width: 300,
+          height: 300,
+          progressBarWidth: '100%',
+          maxFileSize: '5MB',
+          maxFiles: 1,
+          acceptedFiles: '.txt'
+        })
+    });
+
+      let zmiana = () => {
+          let x = document.getElementById("plik");
+          let y = document.getElementById("tekst");
+          let btn = document.getElementById("guzikzamiany");
+          let btn1 = document.getElementById("guzikplik");
+          let hidden = x.getAttribute("hidden");
+          if (hidden) {
+            y.setAttribute("hidden", "hidden");
+            x.removeAttribute("hidden");
+            btn.innerText="Tekst";
+            btn1.removeAttribute("hidden");
+          } else {
+            y.removeAttribute("hidden");
+            x.setAttribute("hidden", "hidden");
+            btn1.setAttribute("hidden", "hidden");
+            btn.innerText="Plik";
+          }
+        }
+
       var textPresetVal = new Choices('#choices-text-preset-values',
       {
         removeItemButton: true,
@@ -132,12 +174,95 @@
           document.getElementById("9").innerHTML = json.dziewięć;
           document.getElementById("10").innerHTML = json.dziesięć;
       }
+
+      function robienietabeli(items){
+           let table = document.createElement('table');
+            let headerRow = document.createElement('tr');
+            let headerID = document.createElement('th');
+            headerID.textContent = 'LP.';
+            headerRow.appendChild(headerID);
+            let headerimg = document.createElement('th');
+            headerimg.textContent = 'Fotko';
+            headerRow.appendChild(headerimg);
+            let headerName = document.createElement('th');
+            headerName.textContent = 'Nazwa';
+            headerRow.appendChild(headerName);
+            let headerSklep = document.createElement('th');
+            headerSklep.textContent = 'Sklep';
+            headerRow.appendChild(headerSklep);
+            let headerValue = document.createElement('th');
+            headerValue.textContent = 'Cena';
+            headerRow.appendChild(headerValue);
+
+            table.appendChild(headerRow);
+
+            for (let i = 0; i < items.length; i++) {
+              let row = document.createElement('tr');
+              let IDCell = document.createElement('td');
+              IDCell.textContent = items[i].ID;
+              row.appendChild(IDCell);
+              let imgCell = document.createElement('td');
+              var imgElement = document.createElement('img');
+              imgElement.src = items[i].img_src;
+              imgCell.appendChild(imgElement)
+              row.appendChild(imgCell);
+              let nameCell = document.createElement('td');
+              nameCell.textContent = items[i].nazwa;
+              row.appendChild(nameCell);
+              let sklepCell = document.createElement('td');
+              sklepCell.textContent = items[i].sklep;
+              row.appendChild(sklepCell);
+              let valueCell = document.createElement('td');
+              valueCell.textContent = items[i].cena;
+              row.appendChild(valueCell);
+              table.appendChild(row);
+            }
+            document.body.appendChild(table);
+      }
+
+      function searchbyfile(){
+          const params = {params: null}
+          fetch('/ceneo', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(
+                params,
+            )
+          })
+          .then(response => response.json())
+          .then(items => {
+              console.log(items)
+                robienietabeli(items)
+          });
+      }
+
+      function search(){
+          var mydiv = document.getElementById("list");
+          mydiv.style.display = "block";
+          const params = {params: document.getElementById("choices-text-preset-values").value};
+          fetch('/ceneo', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(
+                params,
+            )
+          })
+          .then(response => response.json())
+          .then(items => {
+                robienietabeli(items)
+          });
+        }
+
       function displayList(){
 
           var mydiv = document.getElementById("list");
           mydiv.style.display = "block";
           const params = {params: document.getElementById("choices-text-preset-values").value};
-          fetch('http://127.0.0.1:5000/ceneo', {
+          fetch('/ceneo', {
               method: 'POST', headers: {"Content-Type":
               'application/json'}, body: JSON.stringify(params),
               }).then((response) => response.json().then((mydict) => {
