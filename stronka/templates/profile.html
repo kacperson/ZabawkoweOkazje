@@ -1,17 +1,28 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    {% for record in history %}
-        <form action="{{ url_for('list_page')}}" method="POST">
-            <div>
-                {{record}}
-            </div>
-            <div>
-                {% for item in history[record] %}
-                    <div> {{item}}</div>
-                {% endfor %}
-            </div>
-            <button type="submit"> Szukaj </button>
-        </form>
-    {% endfor %}
+    <main>
+        <div class="container">
+
+            {% for record in history %}
+                <form action="{{ url_for('list_page')}}" method="POST">
+                    <div>
+                        {{record}}
+                    </div>
+                    <div>
+                        {% for item in history[record] %}
+                            <div> {{item}}</div>
+                        {% endfor %}
+                    </div>
+        
+                    <button type="submit"> Szukaj </button>
+                    <input type="hidden" name="items_o" value="{{history[record]}}">
+                </form>
+            {% endfor %}
+        </div>
+    </main>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://kit.fontawesome.com/05a09beaf0.js" crossorigin="anonymous"></script>
 {% endblock %}
