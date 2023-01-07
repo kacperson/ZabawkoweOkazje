@@ -11,7 +11,7 @@
                       <div class="inner-form">
                         <div class="input-field">
                           <input class="form-control" id="choices-text-preset-values" type="text" placeholder="Type to search..." />
-                          <button class="btn-search" type="button" onclick="displayList()">
+                          <button class="btn-search" type="button" onclick="displayList(); window.scroll(0,1000)">
                             <i class="fa-solid fa-magnifying-glass"></i>
                           </button>
                         </div>
@@ -45,7 +45,14 @@
             <div class="list-panel", id="centered">
                 <div align="center" id="mytable">
                     <h4>Wybierz jedną z opcji:</h4>
-
+                    <div class="show-container">
+                      <div class="progress" id="progressBar">
+                        <div class="progress-number" aria-valuenow="0" style="left: 0;"></div>
+                        <div class="rounded">
+                          <div class="progress-bar" style="width: 0;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                          </div>
+                        </div>
+                      </div>
                   </div>
             </div>
         </div>
@@ -154,9 +161,6 @@
             $("#table").remove();
 
         }
-
-
-
 
 
     </script>
