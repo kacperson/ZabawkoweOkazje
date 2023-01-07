@@ -18,7 +18,7 @@ def home_page():
     return render_template('index.html')
 
 
-@app.route('/list', methods=['POST'])
+@app.route('/list', methods=['POST', 'GET'])
 def list_page():
     return render_template('list.html')
 
