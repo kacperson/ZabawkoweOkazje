@@ -75,7 +75,6 @@ def logout_page():
 @app.route('/ceneo', methods=['POST'])
 def get_ceneo():
     params = request.get_json()["params"]
-    print(params)
     if params != None:
         lista = params.split(",")
     else:
@@ -83,12 +82,11 @@ def get_ceneo():
         data = my_file.read()
         lista = data.split("\n")
         my_file.close()
-    x = ceneo_scrapper(lista)
-    """print(params)
-    lista2 = ["jeden", "dwa", "trzy", "cztery", "pięć", "sześć", "siedem", "osiem", "dziewięć", "dziesięć"]
-    zipped = dict(zip(lista2, output))
-    print(zipped)"""
-    return x
+    x, propozycje = ceneo_scrapper(lista)
+    zwrot = {}
+    zwrot['znalezione'] = x
+    zwrot['nieznalezione'] = propozycje
+    return zwrot
 
 @app.route('/show_choice', methods=['POST'])
 def show_choice():

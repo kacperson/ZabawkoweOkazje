@@ -52,64 +52,10 @@
                 </section>
             </div>
 
-            <div class="list-panel">
+            <div class="list-panel", id="centered">
                 <div align="center" id="mytable">
                     <h4>Wybierz jedną z opcji:</h4>
-                      <table class="tb">
-                        <tbody>
-                            <tr>
-                                <td>
-                                    <button class="btn-primary" role="button" id="1" onclick="show_toy(this.id)">
-                                    </button>
-                                </td>
-                                <td>
-                                    <button class="btn-primary" role="button" id="2" onclick="show_toy(this.id)"></button>
 
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <button class="btn-primary" role="button" id="3" onclick="show_toy(this.id)"></button>
-
-                                </td>
-                                <td>
-                                    <button class="btn-primary" role="button" id="4" onclick="show_toy(this.id)"></button>
-
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <button class="btn-primary" role="button" id="5" onclick="show_toy(this.id)"></button>
-
-                                </td>
-                                <td>
-                                    <button class="btn-primary" role="button" id="6" onclick="show_toy(this.id)"></button>
-
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <button class="btn-primary" role="button" id="7" onclick="show_toy(this.id)"></button>
-
-                                </td>
-                                <td>
-                                    <button class="btn-primary" role="button" id="8" onclick="show_toy(this.id)"></button>
-
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <button class="btn-primary" role="button" id="9" onclick="show_toy(this.id)"></button>
-
-                                </td>
-                                <td>
-                                    <button class="btn-primary" role="button" id="10" onclick="show_toy(this.id)"></button>
-
-                                </td>
-                            </tr>
-
-                        </tbody>
-                    </table>
                   </div>
             </div>
         </div>
@@ -124,6 +70,9 @@
 <script src="https://unpkg.com/dropzone@5/dist/min/dropzone.min.js"></script>
 <link rel="stylesheet" href="https://unpkg.com/dropzone@5/dist/min/dropzone.min.css" type="text/css" />
 <script>
+    products = [];
+    czysadoznalezienia = [];
+
     $(document).ready(function(){
         $(".dropzone").dropzone({
           url: '/upload',
@@ -163,16 +112,17 @@
 
       function show_json(json){
 
-          document.getElementById("1").innerHTML = json.jeden;
-          document.getElementById("2").innerHTML = json.dwa;
-          document.getElementById("3").innerHTML = json.trzy;
-          document.getElementById("4").innerHTML = json.cztery;
-          document.getElementById("5").innerHTML = json.pięć;
-          document.getElementById("6").innerHTML = json.sześć;
-          document.getElementById("7").innerHTML = json.siedem;
-          document.getElementById("8").innerHTML = json.osiem;
-          document.getElementById("9").innerHTML = json.dziewięć;
-          document.getElementById("10").innerHTML = json.dziesięć;
+          document.getElementById("1").innerHTML = json.num1;
+          document.getElementById("1").innerHTML = json.num1;
+          document.getElementById("2").innerHTML = json.num2;
+          document.getElementById("3").innerHTML = json.num3;
+          document.getElementById("4").innerHTML = json.num4;
+          document.getElementById("5").innerHTML = json.num5;
+          document.getElementById("6").innerHTML = json.num6;
+          document.getElementById("7").innerHTML = json.num7;
+          document.getElementById("8").innerHTML = json.num8;
+          document.getElementById("9").innerHTML = json.num9;
+          document.getElementById("10").innerHTML = json.num10;
       }
 
       function robienietabeli(items){
@@ -238,6 +188,32 @@
           });
       }
 
+      function createTable(rows, json) {
+          var table = document.createElement('table');
+          table.setAttribute("id", "table");
+          var tbody = document.createElement('tbody');
+
+          for (var i = 0; i < rows-1; i++) {
+            var tr = document.createElement('tr');
+            var td = document.createElement('td');
+            var button = document.createElement('button');
+            button.className = 'btn-primary';
+            button.setAttribute('role', 'button');
+            button.id = (i+1).toString();
+            const key = `num${i+1}`
+            button.innerHTML = json[key];
+            button.onclick = function() {
+                searchv2(this.id);
+            };
+            td.appendChild(button);
+            tr.appendChild(td);
+            tbody.appendChild(tr);
+          }
+
+          table.appendChild(tbody);
+          document.getElementById("centered").appendChild(table);
+        }
+
       function search(){
           var mydiv = document.getElementById("list");
           mydiv.style.display = "block";
@@ -252,41 +228,59 @@
             )
           })
           .then(response => response.json())
-          .then(items => {
-                robienietabeli(items)
+          .then(lista => {
+              if (lista['znalezione'] != undefined) {
+                  for (let i = 0; i <= lista['znalezione'].length; i++) {
+                      if (lista['znalezione'][i] != undefined)
+                        products.push(lista['znalezione'][i])
+                  }
+              }
+              for (let i = 0; i <= lista['nieznalezione'].length; i++) {
+                  var xd = lista['nieznalezione'][i]
+                  if (xd == undefined) {
+                      robienietabeli(products);
+                  } else {
+                      createTable(Object.keys(xd).length, xd);
+                  }
+              }
           });
         }
 
-      function displayList(){
-
-          var mydiv = document.getElementById("list");
-          mydiv.style.display = "block";
-          const params = {params: document.getElementById("choices-text-preset-values").value};
+      function searchv2(clicked_id){
+          const params2 = {params: document.getElementById(clicked_id).innerHTML};
+          deleteExisting()
           fetch('/ceneo', {
-              method: 'POST', headers: {"Content-Type":
-              'application/json'}, body: JSON.stringify(params),
-              }).then((response) => response.json().then((mydict) => {
-                 console.log(mydict);
-                 show_json(mydict);
-          }
-              )).catch((error) => {console.log(error)});
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(
+                    params2,
+                )
+              })
+              .then(response => response.json())
+              .then(lista => {
+                  if (lista['znalezione'] != undefined) {
+                  for (let i = 0; i <= lista['znalezione'].length; i++) {
+                      if (lista['znalezione'][i] != undefined) {
+                          lista['znalezione'][i].ID = products[products.length - 1].ID + 1
+                          products.push(lista['znalezione'][i])
+                      }
+                  }
+              }
+                  var xd = lista['nieznalezione'][0]
+                  if( xd == undefined){
+                  robienietabeli(algorytm(products));
+                  }
+                  else {
+                      deleteExisting();
+                      createTable(Object.keys(xd).length, xd);
+                  }
+              });
       }
-
-      function show_toy(clicked_id){
-          alert(clicked_id);
-          const params = {params: document.getElementById("choices-text-preset-values").value,
-          number: clicked_id};
-        fetch('http://127.0.0.1:5000/show_choice', {
-              method: 'POST', headers: {"Content-Type":
-              'application/json'}, body: JSON.stringify(params),
-              }).then((response) => response.json().then((d1) => {
-                 console.log(d1);
-                 alert(JSON.stringify(d1));
-          }
-              )).catch((error) => {console.log(error)});
-
-      }
-
+    function deleteExisting() {
+            $("#table").remove();
+        }
 
     </script>
 {% endblock %}

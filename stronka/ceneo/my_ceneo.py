@@ -59,8 +59,8 @@ class Ceneo:
             ilosc = 11
         if ilosc > 2:
             for i in range (0, ilosc-1):
+                #xd.append(lista_propozycji.find_element(By.XPATH, f'./div[@data-position="{i}"]/div/div[1]/a/img').get_attribute('src'))
                 xd.append(lista_propozycji.find_element(By.XPATH, f'./div[@data-position="{i}"]').get_attribute('data-productname'))
-                xd.append(lista_propozycji.find_element(By.XPATH, f'./div[@data-position="{i}"]/div/div[1]/a/img').get_attribute('src'))
         else:
             element = lista_propozycji.find_element(By.XPATH, f'./div[@data-position="0"]')
             self.driver.execute_script("arguments[0].click()", element)
