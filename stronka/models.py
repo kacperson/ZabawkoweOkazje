@@ -26,3 +26,8 @@ class User(db.Model, UserMixin):
 
     def check_password_correction(self, attempted_password):
         return bcrypt.check_password_hash(self.password_hash, attempted_password)
+
+class SearchHistory(db.Model):
+    id = db.Column(db.Integer(), primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    items = db.Column(db.text, nullable=False)
