@@ -1,6 +1,12 @@
 @import url('https://fonts.googleapis.com/css?family=Raleway:400,700');
 
 
+.background-login{
+	width: 100%;
+	background-color: rgba(223, 231, 253, 1);
+	background-image: linear-gradient(90deg, rgba(223, 231, 253, 1) 18%, rgba(205, 218, 253, 1) 80%);
+	height: 1000px;
+}
 
 .container-log {
 	display: flex;
@@ -10,7 +16,7 @@
 }
 
 .screen {
-	background: linear-gradient(90deg, #d2c0e1, #e7c6ff);
+	background: linear-gradient(90deg, #C8B6FF, #BBD0FF);
 	position: relative;
 	height: 600px;
 	width: 360px;
@@ -20,7 +26,7 @@
 .screen__content {
 	z-index: 1;
 	position: relative;
-	height: 90%;
+	height: 100%;
 }
 
 .screen__background {
@@ -51,7 +57,7 @@
 .screen__background__shape2 {
 	height: 220px;
 	width: 220px;
-	background: #FFAFCC;
+	background: #C8B6FF;
 	top: -172px;
 	right: 0;
 	border-radius: 32px;
@@ -60,7 +66,7 @@
 .screen__background__shape3 {
 	height: 540px;
 	width: 190px;
-	background: linear-gradient(270deg, #CDB4DB, #FFC8DD);
+	background: linear-gradient(270deg, #B8C0FF, #dfe7fd);
 	top: -24px;
 	right: 0;
 	border-radius: 32px;
@@ -69,7 +75,7 @@
 .screen__background__shape4 {
 	height: 400px;
 	width: 200px;
-	background: #CDB4DB;
+	background: #B8C0FF;
 	top: 420px;
 	right: 50px;
 	border-radius: 60px;
@@ -106,7 +112,7 @@
 
 .login__input {
 	border: none;
-	border-bottom: 2px solid #FFC8DD;
+	border-bottom: 2px solid #C8B6FF;
 	background: none;
 	padding: 10px;
 	padding-left: 24px;
@@ -119,7 +125,7 @@
 .login__input:focus,
 .login__input:hover {
 	outline: none;
-	border-bottom-color: #FFAFCC;
+	border-bottom-color: #C8B6FF;
 }
 
 
@@ -136,7 +142,7 @@
 	align-items: center;
 	width: 100%;
 	color: #8093f1;
-	box-shadow: 0px 2px 2px #FFAFCC;
+	box-shadow: 0px 2px 2px #8093f1;
 	cursor: pointer;
 	transition: .2s;
 }
@@ -144,21 +150,21 @@
 .login__submit:active,
 .login__submit:focus,
 .login__submit:hover {
-	border-color: #FFAFCC;
+	border-color: #8093f1;
 	outline: none;
 }
 
 .button__icon {
 	font-size: 24px;
 	margin-left: auto;
-	color: #FFC8DD;
+	color: #8093f1;
 }
 
 .backhome {
 	position: absolute;
 	padding: 20px;
 	font-size: 19px;
-	color: #FFC8DD;
+	color: #8093f1;
 	border-radius: 25px;
 	border-width: 5px;
 }

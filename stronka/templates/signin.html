@@ -2,11 +2,12 @@
 
 {% block content %}
 <main>
-        <div class="container-log">
+    <div class="background-login">
+        <div class="container-log container">
             <div class="screen">
                 <div class="screen__content">
                     <a class="backhome" href="/home"><i class="fa-solid fa-arrow-left-long fa-lg"></i></a>
-                    <form method="POST" class="login">
+                    <form method="POST" class="login__menu">
                         {{ form.hidden_tag() }}
                         <div class="signin__field">
                             <i class="signin__icon fas fa-user"></i>
@@ -38,7 +39,9 @@
                 </div>
             </div>
         </div>
-    </main>
+    </div>
+</main>
+
 {% endblock %}
 {% block scripts %}
 <script src="https://kit.fontawesome.com/05a09beaf0.js" crossorigin="anonymous"></script>

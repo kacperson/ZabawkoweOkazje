@@ -3,12 +3,12 @@
 
 {% block content %}
 <main>
-
-            <div class="container-log">
+    <div class="background-login">
+            <div class="container-log container">
                 <div class="screen">
                     <div class="screen__content">
                         <a class="backhome" href="/home"><i class="fa-solid fa-arrow-left-long fa-lg"></i></a>
-                        <form method="POST" class="form-signin login">
+                        <form method="POST" class="form-signin login__menu">
                             {{ form.hidden_tag() }}
                             <div class="login__field">
                                {{ form.username(class="form-control login__input", placeholder="Username") }}
