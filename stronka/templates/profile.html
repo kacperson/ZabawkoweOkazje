@@ -3,7 +3,15 @@
 {% block content %}
     {% for record in history %}
         <form action="{{ url_for('list_page')}}" method="POST">
-            <button type="submit"> {{record.search_date}} {{record.items}} </button>
+            <div>
+                {{record}}
+            </div>
+            <div>
+                {% for item in history[record] %}
+                    <div> {{item}}</div>
+                {% endfor %}
+            </div>
+            <button type="submit"> Szukaj </button>
         </form>
     {% endfor %}
 {% endblock %}

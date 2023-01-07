@@ -107,5 +107,6 @@ def show_choice():
 @app.route('/profile', methods=["GET","POST"])
 def show_history():
     history = SearchHistory.query.filter_by(user_id=current_user.id)
-
-    return render_template('profile.html', history=history)
+    tempDict = {record.search_date : record.items.split(sep=',') for record in history}
+    
+    return render_template('profile.html', history=tempDict)
