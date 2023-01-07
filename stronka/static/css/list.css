@@ -6,6 +6,10 @@
     height: auto;
 }
 
+.background-profile h2{
+  font-weight: bold;
+  color: #eeeeee;
+}
 fieldset {
   margin: 0;
   padding: 0;
