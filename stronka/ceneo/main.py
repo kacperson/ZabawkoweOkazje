@@ -6,7 +6,7 @@ from stronka.ceneo.my_ceneo import Ceneo
 def ceneo_scrapper(list):
     produkty = []
     options = Options()
-    driver = webdriver.Chrome(executable_path="D:\chromedriver.exe",options=options)
+    driver = webdriver.Chrome(executable_path="chromedriver.exe", options=options)
     driver.maximize_window()
     bot = Ceneo(driver)
     pierwszy = True
