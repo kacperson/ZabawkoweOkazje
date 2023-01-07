@@ -8,7 +8,7 @@
                   <form>
                     <fieldset>
                       <legend>CZEGO SZUKASZ?</legend>
-                        <button type="button" id="guzikzamiany" onclick="zmiana();"><img src="https://image.ceneostatic.pl/data/products/100041140/f-lego-icons-10281-drzewko-bonsai.jpg">Plik</button>
+                        <button type="button" id="guzikzamiany" onclick="zmiana();">Plik</button>
                       <div class="dropzone" id="plik" hidden>
                         <div class="dz-message needsclick">
                             <h1>Upuść pliki tutaj lub kliknij, aby przesłać.</h1>
@@ -193,14 +193,18 @@
           table.setAttribute("id", "table");
           var tbody = document.createElement('tbody');
 
-          for (var i = 0; i < rows-1; i++) {
+          for (var i = 0; i < rows-1; i=i+2) {
             var tr = document.createElement('tr');
             var td = document.createElement('td');
             var button = document.createElement('button');
             button.className = 'btn-primary';
             button.setAttribute('role', 'button');
             button.id = (i+1).toString();
-            const key = `num${i+1}`
+            const key = `num${i+1}`;
+            const img = 'num${i+2}';
+            var imgElement = document.createElement('img');
+            imgElement.src = img;
+            button.appendChild(imgElement);
             button.innerHTML = json[key];
             button.onclick = function() {
                 searchv2(this.id);
