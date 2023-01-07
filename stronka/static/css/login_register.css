@@ -1,14 +1,8 @@
 @import url('https://fonts.googleapis.com/css?family=Raleway:400,700');
 
-* {
-	box-sizing: border-box;
-	margin: 0;
-	padding: 0;
-	font-family: Raleway, sans-serif;
-}
 
 
-.container {
+.container-log {
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -26,7 +20,7 @@
 .screen__content {
 	z-index: 1;
 	position: relative;
-	height: 100%;
+	height: 90%;
 }
 
 .screen__background {
@@ -81,7 +75,7 @@
 	border-radius: 60px;
 }
 
-.login {
+.login__menu {
 	width: 320px;
 	padding: 30px;
 	padding-top: 156px;
@@ -173,9 +167,3 @@
 	color: #8093f1;
 }
 
-#admincheck{
-	font-weight: bold;
-	margin-top: 80px;
-	margin-left: 30px;
-	margin-right: 5px;
-}
