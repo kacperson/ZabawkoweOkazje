@@ -1,66 +1,27 @@
-import json
-import time
-
 import pyshorteners
 import selenium.common.exceptions
 from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 class Ceneo:
-    #mydict = {}
 
     def __init__(self, driver):
         self.driver = driver
 
-    """    def odpalenie_strony(self):
-        self.driver.get("https://www.ceneo.pl/Zabawki")
-
-    def zwrocenie_listy(self, items):
-        id = 0
-        mydict = {}
-        for item in items:
-            id = id + 1
-            products = []
-            wyszukiwarka = self.driver.find_element(By.ID, "form-head-search-q")
-            wyszukiwarka.clear()
-            wyszukiwarka.send_keys(item)
-            wyszukiwarka.send_keys(Keys.ENTER)
-            url = self.driver.current_url
-            if url.find("OneClickSearch") == -1:
-                #print("PRODUKT NIEJEDNOZNACZNY WYBIERZ")
-                lista = []
-                element = self.driver.find_element(By.CLASS_NAME, "dropdown-wrapper")
-                self.driver.execute_script("arguments[0].click()", element)
-                #element = self.driver.find_element(By.XPATH,
-                 #                                  '//*[@id="body"]/div/div/div[3]/div/section/div[2]/div[2]/div/div/a[2]')
-                self.driver.execute_script("arguments[0].click()", element)
-                self.driver.implicitly_wait(1)  # seconds
-                lista_propozycji = self.driver.find_element(By.CLASS_NAME, "js_search-results")
-                ilosc = len(lista_propozycji.find_elements(By.XPATH, './div'))
-
-                if ilosc > 11:
-                    ilosc = 11
-                for i in range(0, ilosc - 1):
-                    #print(f'{i + 1}. ',
-                     #     lista_propozycji.find_element(By.XPATH, f'./div[@data-position="{i}"]').get_attribute(
-                      #        'data-productname'))
-                    lista.append(lista_propozycji.find_element(By.XPATH, f'./div[@data-position="{i}"]').get_attribute(
-                        'data-productname'))
-                    #mydict[i] = lista_propozycji.find_element(By.XPATH, f'./div[@data-position="{i}"]').get_attribute('data-productname')
-                return lista"""
-
     def zwrotlista(self):
         xd = []
+        total_height = int(self.driver.execute_script("return document.body.scrollHeight"))
+        for i in range(1, total_height, 20):
+            self.driver.execute_script("window.scrollTo(0, {});".format(i))
         lista_propozycji = WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME, "js_search-results")))
         ilosc = len(lista_propozycji.find_elements(By.XPATH, './div'))
         if ilosc > 11:
             ilosc = 11
         if ilosc > 2:
-            for i in range (0, ilosc-1):
-                xd.append(lista_propozycji.find_element(By.XPATH, f'./div[@data-position="{i}"]').get_attribute('data-productname'))
+            for i in range(0, ilosc-1):
                 xd.append(lista_propozycji.find_element(By.XPATH, f'./div[@data-position="{i}"]/div/div[1]/a/img').get_attribute('src'))
+                xd.append(lista_propozycji.find_element(By.XPATH, f'./div[@data-position="{i}"]').get_attribute('data-productname'))
         else:
             element = lista_propozycji.find_element(By.XPATH, f'./div[@data-position="0"]')
             self.driver.execute_script("arguments[0].click()", element)
@@ -89,6 +50,9 @@ class Ceneo:
 
     def raporcik(self):
         products = []
+        """total_height = int(self.driver.execute_script("return document.body.scrollHeight"))
+        for i in range(1, total_height, 20):
+            self.driver.execute_script("window.scrollTo(0, {});".format(i))"""
         ilosc_ofert = self.driver.find_element(By.CLASS_NAME, 'js_normal-offers')
         ilosc = len(ilosc_ofert.find_elements(By.XPATH, './li'))
         for numerek in range(1, ilosc+1):
