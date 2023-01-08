@@ -2,10 +2,10 @@ import json
 import collections
 import itertools
 
-class SortingAlgorithm:
 
+class SortingAlgorithm:
     def __init__(self, products=None, searched=None):
-        self.isFound = {item : 0 for item in searched}
+        self.isFound = {item: 0 for item in searched}
         f = open("produkty.json")
         self.products = json.load(f)["products"]
         f.close()
@@ -14,7 +14,7 @@ class SortingAlgorithm:
 
     def resetSearched(self):
         temp = self.isFound.keys()
-        self.isFound = {item : 0 for item in temp}
+        self.isFound = {item: 0 for item in temp}
         self.productsInBlocks = {}
 
     def agregateBy(self, key):
@@ -26,17 +26,23 @@ class SortingAlgorithm:
                 self.productsInBlocks[product[key]].append(product)
 
     def show(self):
-        print(json.dumps(self.productsInBlocks,indent=2))
+        print(json.dumps(self.productsInBlocks, indent=2))
 
     def dataIntoSets(self):
         ### the fewest shops
         self.resetSearched()
         DataTFS = {}
         self.agregateBy("vendor")
-        
-        tempDict = {tempVendorName: len(self.productsInBlocks[tempVendorName]) for tempVendorName in self.productsInBlocks}
+
+        tempDict = {
+            tempVendorName: len(self.productsInBlocks[tempVendorName])
+            for tempVendorName in self.productsInBlocks
+        }
         tempDict = collections.OrderedDict(sorted(tempDict.items()))
-        tempDict = {tempVendorName: self.productsInBlocks[tempVendorName] for tempVendorName in tempDict}
+        tempDict = {
+            tempVendorName: self.productsInBlocks[tempVendorName]
+            for tempVendorName in tempDict
+        }
 
         self.productsInBlocks = tempDict
         itemsCounter = 0
@@ -53,14 +59,17 @@ class SortingAlgorithm:
                         DataTFS[vendorName].append(item)
             if itemsCounter == self.searchedQTY:
                 break
-        #print(json.dumps(DataTFS,indent=2))
-        
+        # print(json.dumps(DataTFS,indent=2))
+
         ### the lowest price
 
         self.resetSearched()
         self.agregateBy("name")
 
-        tempList = [[item["id"] for item in self.productsInBlocks[name]] for name in self.productsInBlocks]
+        tempList = [
+            [item["id"] for item in self.productsInBlocks[name]]
+            for name in self.productsInBlocks
+        ]
         combinationsOfItems = list(itertools.product(*tempList))
 
         DataTLP = {}
@@ -74,12 +83,12 @@ class SortingAlgorithm:
                     listOfVendors.append(self.products[itemId]["vendor"])
                     fullPrice += self.products[itemId]["delivery price"]
             DataTLP[combination] = fullPrice
-        DataTLP = sorted(DataTLP.items(), key=lambda x:x[1])
-        
+        DataTLP = sorted(DataTLP.items(), key=lambda x: x[1])
+
         return DataTFS, DataTLP
 
-if __name__ == "__main__":
 
+if __name__ == "__main__":
     searchingFor = ["Klocki Lego 123456", "Motorek", "Book"]
     sortowanie = SortingAlgorithm(searched=searchingFor)
     # sortowanie.agregateBy("vendor")

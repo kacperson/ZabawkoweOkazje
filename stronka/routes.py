@@ -1,5 +1,6 @@
 import os
-from random import random
+import secrets
+from stronka.sendmail import send_verification_email
 from flask import render_template, redirect, url_for, flash, request, jsonify, abort
 from flask_login import login_user, logout_user, current_user
 from werkzeug.utils import secure_filename
@@ -14,61 +15,103 @@ from selenium.webdriver.chrome.options import Options
 from multiprocessing import freeze_support
 
 
-UPLOAD_FOLDER = 'stronka/static/uploads'
-ALLOWED_EXTENSIONS = set(['txt'])
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+UPLOAD_FOLDER = "stronka/static/uploads"
+ALLOWED_EXTENSIONS = set(["txt"])
+app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 
-@app.route('/')
-@app.route('/home')
+
+@app.route("/")
+@app.route("/home")
 def home_page():
-    return render_template('index.html')
+    return render_template("index.html")
 
 
-@app.route('/list', methods=['POST', 'GET'])
+@app.route("/list", methods=["POST", "GET"])
 def list_page():
-    return render_template('list.html',)
+    return render_template(
+        "list.html",
+    )
 
-@app.route('/login', methods=['GET', 'POST'])
+
+@app.route("/login", methods=["GET", "POST"])
 def login_page():
     form = LoginForm()
     if form.validate_on_submit():
         attempted_user = User.query.filter_by(username=form.username.data).first()
-        if attempted_user and attempted_user.check_password_correction(
+        if (
+            attempted_user
+            and attempted_user.check_password_correction(
                 attempted_password=form.password.data
+            )
+            and attempted_user.active
         ):
             login_user(attempted_user)
-            flash(f'Success! You are logged in as: {attempted_user.username}', category='success')
-            return redirect(url_for('home_page'))
+            flash(
+                f"Success! You are logged in as: {attempted_user.username}",
+                category="success",
+            )
+            return redirect(url_for("home_page"))
         else:
-            flash('Username and password are not match! Please try again', category='danger')
-    return render_template('login.html', form=form)
+            flash(
+                "Username and password are not match! Please try again",
+                category="danger",
+            )
+    return render_template("login.html", form=form)
 
 
-@app.route('/signin', methods=['GET', 'POST'])
+@app.route("/signin", methods=["GET", "POST"])
 def signin_page():
     form = RegisterForm()
     if form.validate_on_submit():
-        user_to_create = User(username=form.username.data,
-                              email_address=form.email_address.data,
-                              password=form.password1.data)
+        user_to_create = User(
+            username=form.username.data,
+            email_address=form.email_address.data,
+            password=form.password1.data,
+            active=False,
+            verification_token=secrets.token_hex(16),
+        )
         db.session.add(user_to_create)
         db.session.commit()
-        login_user(user_to_create)
-        flash(f"Account created successfully! You are now logged in as {user_to_create.username}", category='success')
-        return redirect(url_for('home_page'))
+        send_verification_email(
+            user_to_create.email_address,
+            f"http://localhost:5000/verify?token={user_to_create.verification_token}",
+        )
+
+        flash(
+            f"Account created successfully! We've send e-mail with verification code. {user_to_create.username}",
+            category="success",
+        )
+        return redirect(url_for("home_page"))
     if form.errors != {}:  # If there are not errors from the validations
         for err_msg in form.errors.values():
-            flash(f'There was an error with creating a user: {err_msg}', category='danger')
-    return render_template('signin.html', form=form)
+            flash(
+                f"There was an error with creating a user: {err_msg}", category="danger"
+            )
+    return render_template("signin.html", form=form)
 
 
-@app.route('/logout')
+@app.route("/verify")
+def verify():
+    token = request.args.get("token")
+    user = User.query.filter_by(verification_token=token).first()
+    if user:
+        user.active = True
+        user.verification_token = None
+        db.session.commit()
+        flash("Your email address has been verified. You can now log in.", "success")
+    else:
+        flash("Invalid verification token", "danger")
+    return redirect(url_for("login_page"))
+
+
+@app.route("/logout")
 def logout_page():
     logout_user()
-    flash("You have been logged out!", category='info')
+    flash("You have been logged out!", category="info")
     return redirect(url_for("home_page"))
 
-@app.route('/ceneo', methods=['POST'])
+
+@app.route("/ceneo", methods=["POST"])
 def get_ceneo():
     params = request.get_json()["params"]
     if params != None:
@@ -80,26 +123,31 @@ def get_ceneo():
         my_file.close()
     x, propozycje = ceneo_scrapper(lista)
     zwrot = {}
-    zwrot['znalezione'] = x
-    zwrot['nieznalezione'] = propozycje
+    zwrot["znalezione"] = x
+    zwrot["nieznalezione"] = propozycje
     return zwrot
 
-@app.route('/profile', methods=["GET","POST"])
+
+@app.route("/profile", methods=["GET", "POST"])
 def show_history():
     history = SearchHistory.query.filter_by(user_id=current_user.id)
-    tempDict = {record.search_date : record.items.split(sep=',') for record in history}
-    
-    return render_template('profile.html', history=tempDict)
+    tempDict = {record.search_date: record.items.split(sep=",") for record in history}
+
+    return render_template("profile.html", history=tempDict)
+
+
 def allowed_file(filename):
-    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+    return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
+
 
 def file_exist(filename):
-    return os.path.exists(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+    return os.path.exists(os.path.join(app.config["UPLOAD_FOLDER"], filename))
+
 
 @app.route("/upload", methods=["POST", "GET"])
 def upload():
-    if request.method == 'POST':
-        file = request.files['file']
+    if request.method == "POST":
+        file = request.files["file"]
         filename = secure_filename(file.filename)
         """while (True):
             if file_exist(filename):
@@ -108,4 +156,3 @@ def upload():
             else:
                 file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
                 break"""
-

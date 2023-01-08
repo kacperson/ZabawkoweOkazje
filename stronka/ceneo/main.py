@@ -14,10 +14,16 @@ def ceneo_scrapper(list):
     for elem in list:
         if not pierwszy:
             driver.execute_script("window.open('');")
-            driver.switch_to.window(driver.window_handles[len(driver.window_handles) - 1])
-            driver.get(f"https://www.ceneo.pl/Zabawki;szukaj-{elem.replace(' ', '+')};0112-0.htm")
+            driver.switch_to.window(
+                driver.window_handles[len(driver.window_handles) - 1]
+            )
+            driver.get(
+                f"https://www.ceneo.pl/Zabawki;szukaj-{elem.replace(' ', '+')};0112-0.htm"
+            )
         else:
-            driver.get(f"https://www.ceneo.pl/Zabawki;szukaj-{elem.replace(' ', '+')};0112-0.htm")
+            driver.get(
+                f"https://www.ceneo.pl/Zabawki;szukaj-{elem.replace(' ', '+')};0112-0.htm"
+            )
             pierwszy = False
     for i in range(0, len(list)):
         xd = []
@@ -26,12 +32,12 @@ def ceneo_scrapper(list):
         if xd != []:
             lista_numer = []
             for j in range(0, len(xd)):
-                lista_numer.append(f'num{str(j)}')
+                lista_numer.append(f"num{str(j)}")
             zipped = dict(zip(lista_numer, xd))
-            listy_propozycji[f'{list[i]}'] = zipped
+            listy_propozycji[f"{list[i]}"] = zipped
         else:
             tab = bot.raporcik()
             for i, slownik in enumerate(tab):
-                slownik['ID'] = len(produkty) + i
+                slownik["ID"] = len(produkty) + i
             produkty.extend(tab)
     return produkty, listy_propozycji
