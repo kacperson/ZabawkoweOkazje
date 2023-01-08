@@ -50,9 +50,9 @@ class Ceneo:
 
     def raporcik(self):
         products = []
-        """total_height = int(self.driver.execute_script("return document.body.scrollHeight"))
+        total_height = int(self.driver.execute_script("return document.body.scrollHeight"))
         for i in range(1, total_height, 20):
-            self.driver.execute_script("window.scrollTo(0, {});".format(i))"""
+            self.driver.execute_script("window.scrollTo(0, {});".format(i))
         ilosc_ofert = self.driver.find_element(By.CLASS_NAME, 'js_normal-offers')
         ilosc = len(ilosc_ofert.find_elements(By.XPATH, './li'))
         for numerek in range(1, ilosc+1):

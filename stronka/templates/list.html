@@ -8,16 +8,16 @@
                   <form>
                     <fieldset>
                       <legend>CZEGO SZUKASZ?</legend>
-                      <button type="button" id="guzikzamiany" onclick="zmiana();">Plik</button>
+                        <p id="wpisz">Wpisz lub Dodaj plik tekstowy</p>
+
                       <div class="dropzone" id="plik" hidden>
                         <div class="dz-message needsclick">
                             <h1>Upuść pliki tutaj lub kliknij, aby przesłać.</h1>
                         </div>
                       </div>
+
                       <div>
-                        <button type="button" id="guzikplik" hidden onclick="searchbyfile()">
-                            <i class="fa-solid fa-magnifying-glass"></i>
-                        </button>
+
                       </div>
                       <div class="inner-form" id="tekst">
                         <div class="input-field">
@@ -27,6 +27,11 @@
                           </button>
                         </div>
                       </div>
+                        <a type="button" id="guzikzamiany" onclick="zmiana();">Plik <i class="fa-solid fa-upload"></i> </a>
+                        <button type="button" class="b" id="guzikplik" hidden onclick="searchbyfile()">
+                            Wyszukaj
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </button>
                     </fieldset>
                   </form>
                 </div>
@@ -61,13 +66,14 @@
 {% block scripts %}
 
 <script src="https://kit.fontawesome.com/05a09beaf0.js" crossorigin="anonymous"></script>
-<script src="../static/js/extention/choices.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 <script src="https://unpkg.com/dropzone@5/dist/min/dropzone.min.js"></script>
 <link rel="stylesheet" href="https://unpkg.com/dropzone@5/dist/min/dropzone.min.css" type="text/css" />
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css">
+<script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
 <script>
     products = [];
-    czysadoznalezienia = [];
 
     $(document).ready(function(){
         $(".dropzone").dropzone({
@@ -105,27 +111,72 @@
         removeItemButton: true,
       });
 
+      function convert(items){
+          var rows = [];
+          for (var key in items) {
+              var row = items[key];
+              rows.push({
+                LP: row.ID,
+                img_src: `<img src="${row.img_src}">`,
+                nazwa: row.nazwa,
+                sklep: row.sklep,
+                cena: row.cena
+              });
+            }
+          return rows
+      }
+
+
       function robienietabeli(items){
-           let table = document.createElement('table');
-            let headerRow = document.createElement('tr');
-            let headerID = document.createElement('th');
-            headerID.textContent = 'LP.';
-            headerRow.appendChild(headerID);
-            let headerimg = document.createElement('th');
-            headerimg.textContent = 'Fotko';
-            headerRow.appendChild(headerimg);
-            let headerName = document.createElement('th');
-            headerName.textContent = 'Nazwa';
-            headerRow.appendChild(headerName);
-            let headerSklep = document.createElement('th');
-            headerSklep.textContent = 'Sklep';
-            headerRow.appendChild(headerSklep);
-            let headerValue = document.createElement('th');
-            headerValue.textContent = 'Cena';
-            headerRow.appendChild(headerValue);
+          let tabelka = document.createElement('table');
+          tabelka.setAttribute("id", "tabelawynikow");
+          document.getElementById("centered").appendChild(tabelka);
+          console.log($("#tabelawynikow"))
+          var rows = convert(items);
+          $("#tabelawynikow").DataTable({
+              data: rows, // Tablica danych
+              columns: [
+                { data: 'LP', title: "LP." },
+                { data: 'img_src', title: "Fota" },
+                { data: 'nazwa', title: "Nazwa" },
+                { data: 'sklep', title: "Sklep" },
+                { data: 'cena', title: "Cena" }
+              ]
+            });
+          /*let table = document.createElement('table');
+          table.setAttribute("id", "tabelawynikow")
+          let headerRow = document.createElement('tr');
+          let headerID = document.createElement('th');
+          headerID.textContent = 'LP.';
+          headerRow.appendChild(headerID);
+          let headerimg = document.createElement('th');
+          headerimg.textContent = 'Fotko';
+          headerRow.appendChild(headerimg);
+          let headerName = document.createElement('th');
+          headerName.textContent = 'Nazwa';
+          headerRow.appendChild(headerName);
+          let headerSklep = document.createElement('th');
+          headerSklep.textContent = 'Sklep';
+          headerRow.appendChild(headerSklep);
+          let headerValue = document.createElement('th');
+          headerValue.textContent = 'Cena';
+          headerRow.appendChild(headerValue);
+          table.appendChild(headerRow);
+          document.body.appendChild(table);*/
+      }
 
-            table.appendChild(headerRow);
-
+      function dodawanieDoTabeli(items){
+          if (document.getElementById('tabelawynikow') == null){
+              robienietabeli(items)
+          }
+          else {
+              var row = convert(items);
+              $('#tabelawynikow').DataTable().row.add(row).draw();
+          }
+          /*if (document.getElementById('tabelawynikow') == null){
+              robienietabeli()
+          }
+          let table = document.getElementById('tabelawynikow');
             for (let i = 0; i < items.length; i++) {
               let row = document.createElement('tr');
               let IDCell = document.createElement('td');
@@ -146,8 +197,7 @@
               valueCell.textContent = items[i].cena;
               row.appendChild(valueCell);
               table.appendChild(row);
-            }
-            document.body.appendChild(table);
+            }*/
       }
 
       function searchbyfile(){
@@ -173,14 +223,16 @@
           table.setAttribute("id", "table");
           var tbody = document.createElement('tbody');
           for (var i = 0; i < rows-1; i=i+2) {
-            var tr = document.createElement('tr');
+            if (i == 10 || i == 0) {
+                var tr = document.createElement('tr');
+            }
             var td = document.createElement('td');
             var button = document.createElement('button');
             button.className = 'btn-primary';
             button.setAttribute('role', 'button');
-            button.id = (i+1).toString();
             const key = `num${i+1}`;
             const img = `num${i}`;
+            button.id = json[key].toString().replace(' ','-');
             button.setAttribute('nazwa', json[key])
             button.innerHTML = `<img src="${json[img]}">` + `<br>` + json[key];
             button.onclick = function() {
@@ -190,10 +242,10 @@
             tr.appendChild(td);
             tbody.appendChild(tr);
           }
-
           table.appendChild(tbody);
           document.getElementById("centered").appendChild(table);
         }
+
 
       function search(){
           var mydiv = document.getElementById("list");
@@ -214,25 +266,22 @@
               if (lista['znalezione'] != undefined) {
                   for (let i = 0; i <= lista['znalezione'].length; i++) {
                       if (lista['znalezione'][i] != undefined)
-                          products.push(lista['znalezione'][i])
+                          products.push(lista['znalezione'][i]);
                   }
               }
-              if (lista['nieznalezione'] != undefined) {
+              if (Object. keys(lista['nieznalezione']).length != 0) {
                   for (let hwdp = 0; hwdp < params.length; hwdp++) {
                       console.log(lista['nieznalezione'][params[hwdp]])
                       if (lista['nieznalezione'][params[hwdp]] != undefined) {
                           createname(params[hwdp]);
-                          console.log(lista['nieznalezione'][params[hwdp]][0])
-                              console.log('gowno1')
-                              var xd = lista['nieznalezione'][params[hwdp]]
-                              if (xd == undefined) {
-                                  robienietabeli(products);
-                              } else {
-                                  createTable(Object.keys(xd).length, xd);
-                              }
-                              }
+                          var xd = lista['nieznalezione'][params[hwdp]]
+                          createTable(Object.keys(xd).length, xd);
                           }
-                      }
+                          }
+              }
+              else{
+                robienietabeli(products)
+              }
           });
         }
 
@@ -259,26 +308,32 @@
               })
               .then(response => response.json())
               .then(lista => {
+                  dobre = []
                   if (lista['znalezione'] != undefined) {
                   for (let i = 0; i <= lista['znalezione'].length; i++) {
-                      if (lista['znalezione'][i] != undefined) {
-                          lista['znalezione'][i].ID = products[products.length - 1].ID + 1
-                          products.push(lista['znalezione'][i])
-                      }
-                  }
-              }
-                  if (lista['nieznalezione'] != undefined) {
-                  for (let i = 0; i <= lista['nieznalezione'].length; i++) {
-                      document.getElementById("centered").appendChild(table);
-                      for (let j = 0; j <= lista['nieznalezione'][i].length; j++) {
-                          var xd = lista['nieznalezione'][i][j]
-                          if (xd == undefined) {
-                              robienietabeli(products);
-                          } else {
-                              createTable(Object.keys(xd).length, xd);
+                      console.log(products)
+                      if (lista['znalezione'][i] != undefined){
+                          if (products.length != 0) {
+                              console.log('xd')
+                              lista['znalezione'][i].ID = products[products.length - 1].ID + 1
                           }
+                          products.append(lista['znalezione'][i])
                       }
                   }
+                  //dodawanieDoTabeli(dobre)
+              }
+                  if (Object. keys(lista['nieznalezione']).length != 0) {
+                    for (let hwdp = 0; hwdp < params.length; hwdp++) {
+                      console.log(lista['nieznalezione'][params[hwdp]])
+                      if (lista['nieznalezione'][params[hwdp]] != undefined) {
+                          createname(params[hwdp]);
+                          var xd = lista['nieznalezione'][params[hwdp]]
+                          createTable(Object.keys(xd).length, xd);
+                          }
+                          }
+                    }
+              else{
+                dodawanieDoTabeli(products)
               }
               });
       }
