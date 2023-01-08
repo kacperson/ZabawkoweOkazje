@@ -1,5 +1,6 @@
 import os
-from random import random
+import secrets
+from stronka.sendmail import send_verification_email
 from flask import render_template, redirect, url_for, flash, request, jsonify, abort
 from flask_login import login_user, logout_user, current_user
 from werkzeug.utils import secure_filename
@@ -12,6 +13,7 @@ from stronka.ceneo.my_ceneo import Ceneo
 import undetected_chromedriver as uc
 from selenium.webdriver.chrome.options import Options
 from multiprocessing import freeze_support
+
 
 
 UPLOAD_FOLDER = 'stronka/static/uploads'
@@ -35,7 +37,7 @@ def login_page():
         attempted_user = User.query.filter_by(username=form.username.data).first()
         if attempted_user and attempted_user.check_password_correction(
                 attempted_password=form.password.data
-        ):
+        ) and attempted_user.active:
             login_user(attempted_user)
             flash(f'Success! You are logged in as: {attempted_user.username}', category='success')
             return redirect(url_for('home_page'))
@@ -50,16 +52,32 @@ def signin_page():
     if form.validate_on_submit():
         user_to_create = User(username=form.username.data,
                               email_address=form.email_address.data,
-                              password=form.password1.data)
+                              password=form.password1.data,
+                              active=False,
+                              verification_token=secrets.token_hex(16))
         db.session.add(user_to_create)
         db.session.commit()
-        login_user(user_to_create)
-        flash(f"Account created successfully! You are now logged in as {user_to_create.username}", category='success')
+        send_verification_email(user_to_create.email_address, f'http://localhost:5000/verify?token={user_to_create.verification_token}')
+
+        flash(f"Account created successfully! We've send e-mail with verification code. {user_to_create.username}", category='success')
         return redirect(url_for('home_page'))
     if form.errors != {}:  # If there are not errors from the validations
         for err_msg in form.errors.values():
             flash(f'There was an error with creating a user: {err_msg}', category='danger')
     return render_template('signin.html', form=form)
+
+@app.route('/verify')
+def verify():
+    token = request.args.get('token')
+    user = User.query.filter_by(verification_token=token).first()
+    if user:
+        user.active = True
+        user.verification_token = None
+        db.session.commit()
+        flash('Your email address has been verified. You can now log in.', 'success')
+    else:
+        flash('Invalid verification token', 'danger')
+    return redirect(url_for('login_page'))
 
 
 @app.route('/logout')
