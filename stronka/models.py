@@ -15,6 +15,8 @@ class User(db.Model, UserMixin):
     username = db.Column(db.String(length=30), nullable=False, unique=True)
     email_address = db.Column(db.String(length=50), nullable=False, unique=True)
     password_hash = db.Column(db.String(length=60), nullable=False)
+    active = db.Column(db.Boolean(), default=False)
+    verification_token = db.Column(db.String(32))
 
     @property
     def password(self):
