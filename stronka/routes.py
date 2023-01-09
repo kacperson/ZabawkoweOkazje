@@ -132,8 +132,7 @@ def get_ceneo():
         data = my_file.read()
         lista = data.split("\n")
         my_file.close()
-        params = lista
-    zwrot["nazwy"] = params
+    zwrot["nazwy"] = lista
     x, propozycje = ceneo_scrapper(lista)
     zwrot["znalezione"] = x
     zwrot["nieznalezione"] = propozycje

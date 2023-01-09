@@ -199,17 +199,14 @@
 
       function findproduct(lista){
           let params = lista["nazwy"]
-          console.log(params)
-          console.log(lista)
               if (lista['znalezione'] != undefined) {
                   for (let i = 0; i <= lista['znalezione'].length; i++) {
                       if (lista['znalezione'][i] != undefined)
                           products.push(lista['znalezione'][i]);
                   }
               }
-              if (Object. keys(lista['nieznalezione']).length != 0) {
+              if (Object.keys(lista['nieznalezione']).length != 0) {
                   for (let hwdp = 0; hwdp < params.length; hwdp++) {
-                      console.log(lista['nieznalezione'][params[hwdp]])
                       if (lista['nieznalezione'][params[hwdp]] != undefined) {
                           createname(params[hwdp]);
                           var xd = lista['nieznalezione'][params[hwdp]]
