@@ -128,21 +128,6 @@
 
 
       function robienietabeli(){
-          /*let tabelka = document.createElement('table');
-          tabelka.setAttribute("id", "tabelawynikow");
-          document.getElementById("centered").appendChild(tabelka);
-          console.log($("#tabelawynikow"))
-          var rows = convert(items);
-          $("#tabelawynikow").DataTable({
-              data: rows, // Tablica danych
-              columns: [
-                { data: 'LP', title: "LP." },
-                { data: 'img_src', title: "Fota" },
-                { data: 'nazwa', title: "Nazwa" },
-                { data: 'sklep', title: "Sklep" },
-                { data: 'cena', title: "Cena" }
-              ]
-            });*/
           let table = document.createElement('table');
           table.setAttribute("id", "tabelawynikow")
           let headerRow = document.createElement('tr');
@@ -166,13 +151,6 @@
       }
 
       function dodawanieDoTabeli(items){
-          /*if (document.getElementById('tabelawynikow') == null){
-              robienietabeli(items)
-          }
-          else {
-              var row = convert(items);
-              $('#tabelawynikow').DataTable().row.add(row).draw();
-          }*/
           if (document.getElementById('tabelawynikow') == null){
               robienietabeli()
           }
@@ -201,6 +179,8 @@
       }
 
       function searchbyfile(){
+          const mydiv = document.getElementById("list");
+          mydiv.style.display = "block";
           const params = {params: null}
           fetch('/ceneo', {
             method: 'POST',
@@ -212,10 +192,33 @@
             )
           })
           .then(response => response.json())
-          .then(items => {
-              console.log(items)
-                robienietabeli(items)
+          .then(lista => {
+              findproduct(lista)
           });
+      }
+
+      function findproduct(lista){
+          let params = lista["nazwy"]
+          console.log(params)
+          console.log(lista)
+              if (lista['znalezione'] != undefined) {
+                  for (let i = 0; i <= lista['znalezione'].length; i++) {
+                      if (lista['znalezione'][i] != undefined)
+                          products.push(lista['znalezione'][i]);
+                  }
+              }
+              if (Object. keys(lista['nieznalezione']).length != 0) {
+                  for (let hwdp = 0; hwdp < params.length; hwdp++) {
+                      console.log(lista['nieznalezione'][params[hwdp]])
+                      if (lista['nieznalezione'][params[hwdp]] != undefined) {
+                          createname(params[hwdp]);
+                          var xd = lista['nieznalezione'][params[hwdp]]
+                          createTable(Object.keys(xd).length, xd);
+                          }
+                          }
+              }
+              robienietabeli()
+              dodawanieDoTabeli(products)
       }
 
       function createTable(rows, json) {
@@ -248,7 +251,7 @@
 
 
       function search(){
-          var mydiv = document.getElementById("list");
+          const mydiv = document.getElementById("list");
           mydiv.style.display = "block";
           let params = {params: document.getElementById("choices-text-preset-values").value};
           fetch('/ceneo', {
@@ -262,27 +265,7 @@
           })
           .then(response => response.json())
           .then(lista => {
-              params = params["params"].split(",")
-              if (lista['znalezione'] != undefined) {
-                  for (let i = 0; i <= lista['znalezione'].length; i++) {
-                      if (lista['znalezione'][i] != undefined)
-                          products.push(lista['znalezione'][i]);
-                  }
-              }
-              if (Object. keys(lista['nieznalezione']).length != 0) {
-                  for (let hwdp = 0; hwdp < params.length; hwdp++) {
-                      console.log(lista['nieznalezione'][params[hwdp]])
-                      if (lista['nieznalezione'][params[hwdp]] != undefined) {
-                          createname(params[hwdp]);
-                          var xd = lista['nieznalezione'][params[hwdp]]
-                          createTable(Object.keys(xd).length, xd);
-                          }
-                          }
-              }
-              else{
-                robienietabeli()
-                dodawanieDoTabeli(products)
-              }
+              findproduct(lista)
           });
         }
 
@@ -295,6 +278,7 @@
           xd.appendChild(xd2)
           document.getElementById("centered").appendChild(xd);
       }
+
       function searchv2(clicked_id){
           const params2 = {params: document.getElementById(clicked_id).getAttribute('nazwa')};
           deleteExisting()

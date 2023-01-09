@@ -1,5 +1,8 @@
 import os
 import secrets
+
+import flask_login
+
 from stronka.sendmail import send_verification_email
 from flask import render_template, redirect, url_for, flash, request, jsonify, abort
 from flask_login import login_user, logout_user, current_user
@@ -114,15 +117,24 @@ def logout_page():
 @app.route("/ceneo", methods=["POST"])
 def get_ceneo():
     params = request.get_json()["params"]
+    zwrot = {}
     if params != None:
         lista = params.split(",")
     else:
-        my_file = open("stronka/static/uploads/xd.txt", "r")
+        filenames = os.listdir(app.config['UPLOAD_FOLDER'])
+        user_filenames = [f for f in filenames if f.startswith('lista')]
+        if len(user_filenames) == 0:
+            abort(404)
+        else:
+            max_num = max([int(f.split(".")[0].split("_")[-1]) for f in user_filenames])
+        filename = f'lista_{max_num}.txt'
+        my_file = open(os.path.join(app.config['UPLOAD_FOLDER'], filename), "r")
         data = my_file.read()
         lista = data.split("\n")
         my_file.close()
+        params = lista
+    zwrot["nazwy"] = params
     x, propozycje = ceneo_scrapper(lista)
-    zwrot = {}
     zwrot["znalezione"] = x
     zwrot["nieznalezione"] = propozycje
     return zwrot
@@ -148,11 +160,12 @@ def file_exist(filename):
 def upload():
     if request.method == "POST":
         file = request.files["file"]
-        filename = secure_filename(file.filename)
-        """while (True):
-            if file_exist(filename):
-                print(filename)
-                filename = f'{flask_login.current_user + xd}.txt'
-            else:
-                file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-                break"""
+        filenames = os.listdir(app.config['UPLOAD_FOLDER'])
+        user_filenames = [f for f in filenames if f.startswith('lista')]
+        if len(user_filenames) == 0:
+            max_num = 0
+        else:
+            max_num = max([int(f.split(".")[0].split("_")[-1]) for f in user_filenames])
+        filename = f'lista_{max_num + 1}.txt'
+        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+    return render_template('list.html')
