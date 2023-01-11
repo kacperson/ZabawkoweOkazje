@@ -8,6 +8,7 @@ app = Flask(__name__)
 app.debug = True
 app.config['SECRET_KEY'] = 'ACompl1cat3dText.'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///WWWW.db'
+app.config['SQLITE_DATABASE_CHARSET'] = 'cp1252'
 db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
 login_manager = LoginManager(app)

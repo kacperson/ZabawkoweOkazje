@@ -215,7 +215,7 @@
                           }
               }
               robienietabeli()
-              dodawanieDoTabeli(products)
+              algorithm(products)
       }
 
       function createTable(rows, json) {
@@ -322,6 +322,20 @@
         }
     function deletetab() {
           $("#tabelawynikow").remove();
+    }
+
+    function algorithm(prods){
+      console.log(prods)
+      fetch('/algorithm', {
+        method: 'POST',
+        body: JSON.stringify({
+          products: prods
+        }),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      }).then(response => response.json())
+        .then(data => dodawanieDoTabeli(data['TLP']['products']))
     }
     </script>
 {% endblock %}

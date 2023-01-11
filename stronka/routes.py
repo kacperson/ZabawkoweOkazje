@@ -16,6 +16,8 @@ from stronka.ceneo.my_ceneo import Ceneo
 import undetected_chromedriver as uc
 from selenium.webdriver.chrome.options import Options
 from multiprocessing import freeze_support
+from stronka.algorithmSort import SortingAlgorithm
+import json
 
 
 UPLOAD_FOLDER = "stronka/static/uploads"
@@ -136,6 +138,7 @@ def get_ceneo():
     x, propozycje = ceneo_scrapper(lista)
     zwrot["znalezione"] = x
     zwrot["nieznalezione"] = propozycje
+
     return zwrot
 
 
@@ -168,3 +171,19 @@ def upload():
         filename = f'lista_{max_num + 1}.txt'
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
     return render_template('list.html')
+
+@app.route("/algorithm", methods=["POST"])
+def algo():
+    data = {}
+    if request.method == "POST":
+        
+        data = json.loads(request.get_data().decode())
+        #print(json.dump(data, indent=2))
+        #print(data)
+        products = data.get('products')
+        #print(products)
+        sortowanie = SortingAlgorithm(products)
+        data = sortowanie.dataIntoSets()
+        # print(json.dumps(data[0], indent=2))
+        # print(data[1])
+    return data
