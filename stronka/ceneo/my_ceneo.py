@@ -3,7 +3,7 @@ import selenium.common.exceptions
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-
+from decimal import Decimal
 
 class Ceneo:
     def __init__(self, driver):
@@ -56,9 +56,7 @@ class Ceneo:
             sklep = lista_propozycji.find_element(
                 By.XPATH, f'./div[@data-position="{numer-1}"]'
             )
-            attributes["cena"] = float(
-                sklep.get_attribute("data-price").replace(",", ".")
-            )
+            attributes["cena"] = float(sklep.get_attribute("data-price").replace(",", "."))
             attributes["cena dostawy"] = "BRAK INFORMACJI"
             attributes["sklep"] = (
                 sklep.get_attribute("data-shopurl")
@@ -86,9 +84,9 @@ class Ceneo:
 
     def raporcik(self):
         products = []
-        """total_height = int(self.driver.execute_script("return document.body.scrollHeight"))
+        total_height = int(self.driver.execute_script("return document.body.scrollHeight"))
         for i in range(1, total_height, 20):
-            self.driver.execute_script("window.scrollTo(0, {});".format(i))"""
+            self.driver.execute_script("window.scrollTo(0, {});".format(i))
         ilosc_ofert = self.driver.find_element(By.CLASS_NAME, "js_normal-offers")
         ilosc = len(ilosc_ofert.find_elements(By.XPATH, "./li"))
         for numerek in range(1, ilosc + 1):
@@ -105,8 +103,8 @@ class Ceneo:
             cena = (
                 sklep.find_element(By.CLASS_NAME, "value").text
                 + sklep.find_element(By.CLASS_NAME, "penny").text
-            )
-            cena = float(cena.replace(",", "."))
+            ).replace(" ","").replace(",", ".")
+            cena = float(cena)
             attributes["cena"] = cena
             element = self.driver.find_element(
                 By.CLASS_NAME, "gallery-carousel__media-container"
@@ -128,9 +126,7 @@ class Ceneo:
                 except selenium.common.exceptions.NoSuchElementException:
                     pass
             else:
-                cena_dostawy = round(
-                    float(cena_dostawy[12:19].replace(",", ".")) - cena, 3
-                )
+                cena_dostawy = float(cena_dostawy[12:19].replace(",", ".")) - cena
             attributes["cena dostawy"] = cena_dostawy
             if ilosc == 1:
                 sklep = ilosc_ofert.find_element(By.XPATH, f"./li")

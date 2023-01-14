@@ -59,6 +59,9 @@
 
             <div class="list-panel" id="centered">
             </div>
+            {% if current_user.is_authenticated %}
+                <a href="{{ url_for('getfile') }}">Export</a>
+            {% endif %}
         </div>
     </main>
 {% endblock %}
@@ -116,7 +119,6 @@
           for (var key in items) {
               var row = items[key];
               rows.push({
-                LP: row.ID,
                 img_src: `<img src="${row.img_src}">`,
                 nazwa: row.nazwa,
                 sklep: row.sklep,
@@ -131,9 +133,6 @@
           let table = document.createElement('table');
           table.setAttribute("id", "tabelawynikow")
           let headerRow = document.createElement('tr');
-          let headerID = document.createElement('th');
-          headerID.textContent = 'LP.';
-          headerRow.appendChild(headerID);
           let headerimg = document.createElement('th');
           headerimg.textContent = 'Fotko';
           headerRow.appendChild(headerimg);
@@ -157,9 +156,6 @@
           let table = document.getElementById('tabelawynikow');
             for (let i = 0; i < items.length; i++) {
               let row = document.createElement('tr');
-              let IDCell = document.createElement('td');
-              IDCell.textContent = items[i].ID;
-              row.appendChild(IDCell);
               let imgCell = document.createElement('td');
               var imgElement = document.createElement('img');
               imgElement.src = items[i].img_src;
@@ -302,7 +298,7 @@
                       }
                   }
                   deletetab()
-                  dodawanieDoTabeli(products)
+                  algorithm(products)
               }
                   if (Object. keys(lista['nieznalezione']).length != 0) {
                     for (let hwdp = 0; hwdp < params.length; hwdp++) {
@@ -335,7 +331,10 @@
           'Content-Type': 'application/json'
         }
       }).then(response => response.json())
-        .then(data => dodawanieDoTabeli(data['TLP']['products']))
+        .then(data => {
+            dodawanieDoTabeli(data['TLP']['products'])
+        })
     }
+
     </script>
 {% endblock %}

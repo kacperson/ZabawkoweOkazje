@@ -1,29 +1,27 @@
 import os
 import secrets
 
+import flask
 import flask_login
+from werkzeug.security import safe_join
 
 from stronka.sendmail import send_verification_email
-from flask import render_template, redirect, url_for, flash, request, jsonify, abort
-from flask_login import login_user, logout_user, current_user
-from werkzeug.utils import secure_filename
+from flask import render_template, redirect, url_for, flash, request, abort, send_file, send_from_directory, session
+from flask_login import login_user, logout_user, current_user, login_required
 from stronka import app
 from stronka.forms import RegisterForm, LoginForm
 from stronka.models import User, SearchHistory
 from stronka import db
 from stronka.ceneo.main import ceneo_scrapper
-from stronka.ceneo.my_ceneo import Ceneo
-import undetected_chromedriver as uc
-from selenium.webdriver.chrome.options import Options
-from multiprocessing import freeze_support
 from stronka.algorithmSort import SortingAlgorithm
 import json
 
 
 UPLOAD_FOLDER = "stronka/static/uploads"
+EXPORT_FOLDER = "stronka/static/exports"
 ALLOWED_EXTENSIONS = set(["txt"])
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
-
+app.config["EXPORT_FOLDER"] = EXPORT_FOLDER
 
 @app.route("/")
 @app.route("/home")
@@ -33,9 +31,7 @@ def home_page():
 
 @app.route("/list", methods=["POST", "GET"])
 def list_page():
-    return render_template(
-        "list.html",
-    )
+    return render_template("list.html")
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -51,6 +47,7 @@ def login_page():
             and attempted_user.active
         ):
             login_user(attempted_user)
+            session['logged_in'] = True
             flash(
                 f"Success! You are logged in as: {attempted_user.username}",
                 category="success",
@@ -81,7 +78,7 @@ def signin_page():
             user_to_create.email_address,
             f"http://localhost:5000/verify?token={user_to_create.verification_token}",
         )
-
+        session['logged_in'] = True
         flash(
             f"Account created successfully! We've send e-mail with verification code. {user_to_create.username}",
             category="success",
@@ -112,6 +109,7 @@ def verify():
 @app.route("/logout")
 def logout_page():
     logout_user()
+    session.pop('logged_in', None)
     flash("You have been logged out!", category="info")
     return redirect(url_for("home_page"))
 
@@ -186,4 +184,15 @@ def algo():
         data = sortowanie.dataIntoSets()
         # print(json.dumps(data[0], indent=2))
         # print(data[1])
+        if 'logged_in' in session:
+            with open(os.path.join(app.config['EXPORT_FOLDER'], current_user.username), "w") as file:
+                json.dump(data, file, indent=4)
     return data
+
+@app.route("/getfile")
+def getfile():
+    return send_file(
+        f'static/exports/{current_user.username}',
+        download_name=f'ListaZakupow{current_user.username}.txt',
+        as_attachment=True
+    )
