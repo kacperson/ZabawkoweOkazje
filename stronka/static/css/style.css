@@ -500,3 +500,7 @@ main banner
           transform: translateY(-7px);
 }
 
+.close{
+	background: none;
+	border: none;
+}

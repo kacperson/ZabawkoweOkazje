@@ -674,3 +674,29 @@ legend {
   padding: 10px;
   background-color: #eeeeee;
 }
+
+.list table {
+  width: 100%;
+  margin-top: 20px;
+  padding: 10px;
+}
+
+.list td{
+  width: 90%;
+  height: 200px;
+  margin-top: 20px;
+}
+
+ .btn-list {
+    margin: 10px;
+    width:90%;
+    height: 200px;
+    background-color: #6799E0;
+    border-radius: 15px;
+ }
+
+
+.list td img {
+  width: 200px;
+  height: 200px;
+}

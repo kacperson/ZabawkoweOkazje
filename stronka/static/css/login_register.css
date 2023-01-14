@@ -173,3 +173,7 @@
 	color: #8093f1;
 }
 
+.button__text{
+	background: none;
+	border: none;
+}
