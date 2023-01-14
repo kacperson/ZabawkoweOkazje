@@ -2,7 +2,7 @@ from stronka import db, login_manager
 from stronka import bcrypt
 from flask_login import UserMixin
 from sqlalchemy.sql import func
-
+import datetime
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -33,7 +33,8 @@ class User(db.Model, UserMixin):
 
 
 class SearchHistory(db.Model):
+    __tablename__ = 'history'
     id = db.Column(db.Integer(), primary_key=True)
     user_id = db.Column(db.Integer(), db.ForeignKey("user.id"), nullable=False)
     items = db.Column(db.String(length=100), nullable=False)
-    search_date = db.Column(db.DateTime, nullable=False, server_default=func.now())
+    search_date = db.Column(db.DateTime, nullable=False, default=datetime.date.today())

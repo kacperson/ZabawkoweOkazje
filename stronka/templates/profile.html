@@ -4,23 +4,18 @@
     <main>
         <div class="background-profile  text-center">
             <h2>Historia wyszukiwania</h2>
-            <div class="container-profile container">
+            <div class="history container">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Przedmioty</th>
+                            <th>Data</th>
+                        </tr>
+                    </thead>
+                    <tbody>
 
-                {% for record in history %}
-                    <form action="{{ url_for('list_page')}}" method="POST">
-                        <div>
-                            {{record}}
-                        </div>
-                        <div>
-                            {% for item in history[record] %}
-                                <div> {{item}}</div>
-                            {% endfor %}
-                        </div>
-
-                        <button type="submit"> Szukaj </button>
-                        <input type="hidden" name="items_o" value="{{history[record]}}">
-                    </form>
-                {% endfor %}
+                    </tbody>
+                </table>
             </div>
         </div>
     </main>
@@ -28,4 +23,22 @@
 
 {% block scripts %}
 <script src="https://kit.fontawesome.com/05a09beaf0.js" crossorigin="anonymous"></script>
+<script>
+    window.addEventListener("load", ()=>{
+    loadHistory();
+    });
+
+    function loadHistory() {
+        const HistoryTxt = document.querySelector(".history .table tbody")
+        all_items = {{ history | tojson }}
+
+        for (const [key, value] of Object.entries(all_items)) {
+            let history = `<tr class="row-hist">
+                            <td>${value['items'].replace(',',' ')}</td>
+                            <td>${value['search_date'].slice(0,10)}</td>
+                        </tr>`
+            HistoryTxt.insertAdjacentHTML("afterbegin", history);
+        }
+    }
+</script>
 {% endblock %}

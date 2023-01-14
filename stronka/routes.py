@@ -120,6 +120,9 @@ def get_ceneo():
     zwrot = {}
     if params != None:
         lista = params.split(",")
+        obj = SearchHistory(user_id=current_user.id, items=params)
+        db.session.add(obj)
+        db.session.commit()
     else:
         filenames = os.listdir(app.config['UPLOAD_FOLDER'])
         user_filenames = [f for f in filenames if f.startswith('lista')]
@@ -140,12 +143,18 @@ def get_ceneo():
     return zwrot
 
 
-@app.route("/profile", methods=["GET", "POST"])
+@app.route("/profile", methods=["GET"])
 def show_history():
-    history = SearchHistory.query.filter_by(user_id=current_user.id)
-    tempDict = {record.search_date: record.items.split(sep=",") for record in history}
+    # history = SearchHistory.query.filter_by(user_id=current_user.id)
+    # tempDict = {record.search_date: record.items.split(sep=",") for record in history}
+    query0 = 'SELECT * FROM history ORDER BY id'
+    all_items = db.session.execute(query0)
+    items_list = []
+    for row in all_items:
+        items_dict = {'id': row.id, 'user_id': row.user_id, 'items': row.items, 'search_date': row.search_date}
+        items_list.append(items_dict)
 
-    return render_template("profile.html", history=tempDict)
+    return render_template("profile.html", history=items_list)
 
 
 def allowed_file(filename):
@@ -170,6 +179,7 @@ def upload():
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
     return render_template('list.html')
 
+
 @app.route("/algorithm", methods=["POST"])
 def algo():
     data = {}
@@ -188,6 +198,7 @@ def algo():
             with open(os.path.join(app.config['EXPORT_FOLDER'], current_user.username), "w") as file:
                 json.dump(data, file, indent=4)
     return data
+
 
 @app.route("/getfile")
 def getfile():
