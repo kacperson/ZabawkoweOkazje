@@ -27,7 +27,7 @@
                           </button>
                         </div>
                       </div>
-                        <a type="button" id="guzikzamiany" onclick="zmiana();">Plik <i class="fa-solid fa-upload"></i> </a>
+                        <a type="button" id="guzikzamiany" onclick="toggleFileInput();">Plik <i class="fa-solid fa-upload"></i> </a>
                         <button type="button" class="b" id="guzikplik" hidden onclick="searchbyfile()">
                             Wyszukaj
                             <i class="fa-solid fa-magnifying-glass"></i>
@@ -90,234 +90,222 @@
         })
     });
 
-      let zmiana = () => {
-          let x = document.getElementById("plik");
-          let y = document.getElementById("tekst");
-          let btn = document.getElementById("guzikzamiany");
-          let btn1 = document.getElementById("guzikplik");
-          let hidden = x.getAttribute("hidden");
-          if (hidden) {
-            y.setAttribute("hidden", "hidden");
-            x.removeAttribute("hidden");
-            btn.innerText="Tekst";
-            btn1.removeAttribute("hidden");
-          } else {
-            y.removeAttribute("hidden");
-            x.setAttribute("hidden", "hidden");
-            btn1.setAttribute("hidden", "hidden");
-            btn.innerHTML="Plik " + `<i class="fa-solid fa-upload"></i>`;
+    function toggleFileInput() {
+    const fileInput = document.getElementById("plik");
+    const textInput = document.getElementById("tekst");
+    const toggleButton = document.getElementById("guzikzamiany");
+    const fileButton = document.getElementById("guzikplik");
+  
+    if (fileInput.hasAttribute("hidden")) {
+        textInput.setAttribute("hidden", true);
+        fileInput.removeAttribute("hidden");
+        toggleButton.innerText = "Tekst";
+        fileButton.removeAttribute("hidden");
+    } else {
+        textInput.removeAttribute("hidden");
+        fileInput.setAttribute("hidden", true);
+        fileButton.setAttribute("hidden", true);
+        toggleButton.innerHTML = "Plik " + `<i class="fa-solid fa-upload"></i>`;
+    }
+}
+
+    var textPresetVal = new Choices('#choices-text-preset-values',
+    {
+      removeItemButton: true,
+    });
+
+    function convert(items){
+        var rows = [];
+        for (var key in items) {
+            var row = items[key];
+            rows.push({
+              img_src: `<img src="${row.img_src}">`,
+              nazwa: row.nazwa,
+              sklep: row.sklep,
+              cena: row.cena
+            });
           }
+        return rows
+    }
+
+
+    function robienietabeli(){
+        const ListTxt = document.querySelector('.list-panel')
+        let tableHTML = `<table id="tabelawynikow">
+                            <tr class="row-hist">
+                                <th>Fotka</th>
+                                <th>Nazwa</th>
+                                <th>Sklep</th>
+                                <th>Cena</th>
+                            </tr>
+                        </table>`
+        ListTxt.insertAdjacentHTML("beforeend", tableHTML);
+    }
+
+    function dodawanieDoTabeli(items) {
+        if (document.getElementById('tabelawynikow') == null) {
+          robienietabeli();
+        }
+        let table = document.getElementById('tabelawynikow');
+        let rowsHTML = '';
+
+        for (let i = 0; i < items.length; i++) {
+          rowsHTML += `<tr>
+                        <td><img src="${items[i].img_src}"></td>
+                        <td>${items[i].nazwa}</td>
+                        <td>${items[i].sklep}</td>
+                        <td>${items[i].cena}</td>
+                      </tr>`;
         }
 
-      var textPresetVal = new Choices('#choices-text-preset-values',
-      {
-        removeItemButton: true,
-      });
+        table.insertAdjacentHTML('beforeend', rowsHTML);
+    }
 
-      function convert(items){
-          var rows = [];
-          for (var key in items) {
-              var row = items[key];
-              rows.push({
-                img_src: `<img src="${row.img_src}">`,
-                nazwa: row.nazwa,
-                sklep: row.sklep,
-                cena: row.cena
-              });
+    function searchbyfile(){
+        const mydiv = document.getElementById("list");
+        mydiv.style.display = "block";
+        const params = {params: null}
+        fetch('/ceneo', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(
+              params,
+          )
+        })
+        .then(response => response.json())
+        .then(lista => {
+            findProduct(lista)
+        });
+    }
+
+    function findProduct(list) {
+        let params = list["nazwy"];
+        let products = [];
+        let notFound = list["nieznalezione"];
+        let found = list["znalezione"];
+        
+        if (found != undefined) {
+            for (let i = 0; i <= found.length; i++) {
+                if (found[i] != undefined) {
+                    products.push(found[i]);
+                }
             }
-          return rows
-      }
-
-
-      function robienietabeli(){
-          let table = document.createElement('table');
-          table.setAttribute("id", "tabelawynikow")
-          let headerRow = document.createElement('tr');
-          let headerimg = document.createElement('th');
-          headerimg.textContent = 'Fotko';
-          headerRow.appendChild(headerimg);
-          let headerName = document.createElement('th');
-          headerName.textContent = 'Nazwa';
-          headerRow.appendChild(headerName);
-          let headerSklep = document.createElement('th');
-          headerSklep.textContent = 'Sklep';
-          headerRow.appendChild(headerSklep);
-          let headerValue = document.createElement('th');
-          headerValue.textContent = 'Cena';
-          headerRow.appendChild(headerValue);
-          table.appendChild(headerRow);
-          document.getElementById("centered").appendChild(table);
-      }
-
-      function dodawanieDoTabeli(items){
-          if (document.getElementById('tabelawynikow') == null){
-              robienietabeli()
-          }
-          let table = document.getElementById('tabelawynikow');
-            for (let i = 0; i < items.length; i++) {
-              let row = document.createElement('tr');
-              let imgCell = document.createElement('td');
-              var imgElement = document.createElement('img');
-              imgElement.src = items[i].img_src;
-              imgCell.appendChild(imgElement)
-              row.appendChild(imgCell);
-              let nameCell = document.createElement('td');
-              nameCell.textContent = items[i].nazwa;
-              row.appendChild(nameCell);
-              let sklepCell = document.createElement('td');
-              sklepCell.textContent = items[i].sklep;
-              row.appendChild(sklepCell);
-              let valueCell = document.createElement('td');
-              valueCell.textContent = items[i].cena;
-              row.appendChild(valueCell);
-              table.appendChild(row);
+        }
+        if (Object.keys(notFound).length != 0) {
+            for (let i = 0; i < params.length; i++) {
+                if (notFound[params[i]] != undefined) {
+                    createName(params[i]);
+                    const productDetails = notFound[params[i]];
+                    createTable(Object.keys(productDetails).length, productDetails);
+                }
             }
-      }
+        }
+        robienietabeli();
+        algorithm(products);
+    }
 
-      function searchbyfile(){
-          const mydiv = document.getElementById("list");
-          mydiv.style.display = "block";
-          const params = {params: null}
-          fetch('/ceneo', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(
-                params,
-            )
-          })
-          .then(response => response.json())
-          .then(lista => {
-              findproduct(lista)
-          });
-      }
-
-      function findproduct(lista){
-          let params = lista["nazwy"]
-              if (lista['znalezione'] != undefined) {
-                  for (let i = 0; i <= lista['znalezione'].length; i++) {
-                      if (lista['znalezione'][i] != undefined)
-                          products.push(lista['znalezione'][i]);
-                  }
-              }
-              if (Object.keys(lista['nieznalezione']).length != 0) {
-                  for (let hwdp = 0; hwdp < params.length; hwdp++) {
-                      if (lista['nieznalezione'][params[hwdp]] != undefined) {
-                          createname(params[hwdp]);
-                          var xd = lista['nieznalezione'][params[hwdp]]
-                          createTable(Object.keys(xd).length, xd);
-                          }
-                          }
-              }
-              robienietabeli()
-              algorithm(products)
-      }
-
-      function createTable(rows, json) {
-          var table = document.createElement('table');
-          table.setAttribute("id", "table");
-          var tbody = document.createElement('tbody');
-          for (var i = 0; i < rows-1; i=i+2) {
-            if (i == 10 || i == 0) {
-                var tr = document.createElement('tr');
-            }
-            var td = document.createElement('td');
-            var button = document.createElement('button');
+    function createTable(rows, json) {
+        const table = document.createElement('table');
+        table.setAttribute("id", "table");
+        const tbody = document.createElement('tbody');
+        for (let i = 0; i < rows-1; i += 2) {
+            let tr = document.createElement('tr');
+            const td = document.createElement('td');
+            const button = document.createElement('button');
             button.className = 'btn-primary';
             button.setAttribute('role', 'button');
             const key = `num${i+1}`;
             const img = `num${i}`;
-            button.id = json[key].toString().replace(' ','-');
+            button.id = json[key].toString().replace(/\s+/g,'-');
             button.setAttribute('nazwa', json[key])
             button.innerHTML = `<img src="${json[img]}">` + `<br>` + json[key];
-            button.onclick = function() {
-                searchv2(this.id);
-            };
+            button.addEventListener("click",()=>{
+                searchv2(button.id);
+            });
             td.appendChild(button);
             tr.appendChild(td);
             tbody.appendChild(tr);
-          }
-          table.appendChild(tbody);
-          document.getElementById("centered").appendChild(table);
         }
+        table.appendChild(tbody);
+        document.getElementById("centered").appendChild(table);
+    }
 
 
-      function search(){
-          const mydiv = document.getElementById("list");
-          mydiv.style.display = "block";
-          let params = {params: document.getElementById("choices-text-preset-values").value};
-          fetch('/ceneo', {
+    function search(){
+      const mydiv = document.getElementById("list");
+      mydiv.style.display = "block";
+      let params = {params: document.getElementById("choices-text-preset-values").value};
+      fetch('/ceneo', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(
+            params,
+        )
+      })
+      .then(response => response.json())
+      .then(lista => {
+          findProduct(lista)
+      });
+    }
+
+    function createName(string) {
+        const mainDiv = document.createElement('div');
+        mainDiv.setAttribute("align", "center");
+        mainDiv.setAttribute("id", "mytable");
+        const heading = document.createElement('h4');
+        heading.textContent = `Wybierz jedną z opcji, ponieważ hasło ${string} nie jest wystarczające`;
+        mainDiv.appendChild(heading);
+        document.getElementById("centered").appendChild(mainDiv);
+    }
+
+    function searchv2(clickedId) {
+        const name = document.getElementById(clickedId).getAttribute('nazwa');
+        const params = {params: name};
+        deleteExisting();
+        fetch('/ceneo', {
             method: 'POST',
             headers: {
-              'Content-Type': 'application/json'
+                'Content-Type': 'application/json'
             },
-            body: JSON.stringify(
-                params,
-            )
-          })
-          .then(response => response.json())
-          .then(lista => {
-              findproduct(lista)
-          });
-        }
-
-      function createname(stringi){
-          var xd = document.createElement('div')
-          xd.setAttribute("align", "center")
-          xd.setAttribute("id", "mytable")
-          var xd2 = document.createElement('h4')
-          xd2.innerHTML = `Wybierz jedną z opcji, ponieważ hasło ${stringi} nie jest wystarczające`
-          xd.appendChild(xd2)
-          document.getElementById("centered").appendChild(xd);
-      }
-
-      function searchv2(clicked_id){
-          const params2 = {params: document.getElementById(clicked_id).getAttribute('nazwa')};
-          deleteExisting()
-          fetch('/ceneo', {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(
-                    params2,
-                )
-              })
-              .then(response => response.json())
-              .then(lista => {
-                  if (lista['znalezione'] != undefined) {
-                  for (let i = 0; i <= lista['znalezione'].length; i++) {
-                      console.log(products)
-                      if (lista['znalezione'][i] != undefined){
-                          if (products.length != 0) {
-                              console.log('xd')
-                              lista['znalezione'][i].ID = products[products.length - 1].ID + 1
-                          }
-                          products.push(lista['znalezione'][i])
-                      }
-                  }
-                  deletetab()
-                  algorithm(products)
-              }
-                  if (Object. keys(lista['nieznalezione']).length != 0) {
-                    for (let hwdp = 0; hwdp < params.length; hwdp++) {
-                      console.log(lista['nieznalezione'][params[hwdp]])
-                      if (lista['nieznalezione'][params[hwdp]] != undefined) {
-                          createname(params[hwdp]);
-                          var xd = lista['nieznalezione'][params[hwdp]]
-                          createTable(Object.keys(xd).length, xd);
-                          }
-                          }
+            body: JSON.stringify(params)
+        })
+        .then(response => response.json())
+        .then(list => {
+            if (list['znalezione'] != undefined) {
+                for (let i = 0; i <= list['znalezione'].length; i++) {
+                    if (list['znalezione'][i] != undefined){
+                        if (products.length != 0) {
+                            list['znalezione'][i].ID = products[products.length - 1].ID + 1;
+                        }
+                        products.push(list['znalezione'][i]);
                     }
-              });
-      }
+                }
+                deletetab();
+                algorithm(products);
+            }
+            if (Object.keys(list['nieznalezione']).length != 0) {
+                for (let i = 0; i < params.length; i++) {
+                    if (list['nieznalezione'][params[i]] != undefined) {
+                        createName(params[i]);
+                        const productDetails = list['nieznalezione'][params[i]];
+                        createTable(Object.keys(productDetails).length, productDetails);
+                    }
+                }
+            }
+        });
+    }
+
     function deleteExisting() {
-            $("#mytable").remove();
-            $("#table").remove();
-        }
+      $("#mytable").remove();
+      $("#table").remove();
+    }
+
     function deletetab() {
-          $("#tabelawynikow").remove();
+      $("#tabelawynikow").remove();
     }
 
     function algorithm(prods){
