@@ -36,7 +36,7 @@ def ceneo_scrapper(list):
             zipped = dict(zip(lista_numer, xd))
             listy_propozycji[f"{list[i]}"] = zipped
         else:
-            tab = bot.raporcik()
+            tab = bot.wyszukiwanie(lista_propozycji, 1)
             for i, slownik in enumerate(tab):
                 slownik["ID"] = len(produkty) + i
             produkty.extend(tab)

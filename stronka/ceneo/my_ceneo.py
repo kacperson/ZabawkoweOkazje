@@ -35,20 +35,21 @@ class Ceneo:
                     ).get_attribute("data-productname")
                 )
         else:
-            element = lista_propozycji.find_element(
+            """lement = lista_propozycji.find_element(
                 By.XPATH, f'./div[@data-position="0"]'
             )
-            self.driver.execute_script("arguments[0].click()", element)
+            self.driver.execute_script("arguments[0].click()", element)"""
         return xd, lista_propozycji
 
     def wyszukiwanie(self, lista_propozycji, numer):
         if (
             lista_propozycji.find_element(
                 By.XPATH,
-                f'./div[@data-position="{numer-1}"]/div/div[2]/div[2]/div[1]/a[1]',
+                f'./div[@data-position="{numer-1}"]/div/div[2]/div[2]/div/a',
             ).text.lower()
             == "idź do sklepu"
         ):
+            products = []
             attributes = {}
             attributes["nazwa"] = lista_propozycji.find_element(
                 By.XPATH, f'./div[@data-position="{numer-1}"]'
@@ -57,7 +58,7 @@ class Ceneo:
                 By.XPATH, f'./div[@data-position="{numer-1}"]'
             )
             attributes["cena"] = float(sklep.get_attribute("data-price").replace(",", "."))
-            attributes["cena dostawy"] = "BRAK INFORMACJI"
+            attributes["cena dostawy"] = 0
             attributes["sklep"] = (
                 sklep.get_attribute("data-shopurl")
                 .replace("https://", "", 1)
@@ -73,7 +74,8 @@ class Ceneo:
                 attributes["link"] = pyshorteners.Shortener().tinyurl.short(linkv1)
             except:
                 pass
-            return attributes
+            products.append(attributes)
+            return products
         else:
             element = lista_propozycji.find_element(
                 By.XPATH, f'./div[@data-position="{numer-1}"]/div/div[2]/div[2]/a[1]'
@@ -84,63 +86,70 @@ class Ceneo:
 
     def raporcik(self):
         products = []
-        total_height = int(self.driver.execute_script("return document.body.scrollHeight"))
-        for i in range(1, total_height, 20):
-            self.driver.execute_script("window.scrollTo(0, {});".format(i))
-        ilosc_ofert = self.driver.find_element(By.CLASS_NAME, "js_normal-offers")
-        ilosc = len(ilosc_ofert.find_elements(By.XPATH, "./li"))
-        for numerek in range(1, ilosc + 1):
-            attributes = {}
-            attributes["nazwa"] = self.driver.find_element(
-                By.CLASS_NAME, "product-top__product-info__name"
-            ).text
-            if ilosc > 1:
-                sklep = ilosc_ofert.find_element(By.XPATH, f"./li[{numerek}]")
-            else:
-                sklep = ilosc_ofert.find_element(
-                    By.XPATH, f"./li/div/div[1]/div[1]/div[3]"
+        self.driver.get(f'{self.driver.current_url};0280-0.htm')
+        try:
+            element = self.driver.find_element(By.CLASS_NAME, "show-remaining-offers__trigger")
+            self.driver.execute_script("arguments[0].click()", element)
+        finally:
+            total_height = int(self.driver.execute_script("return document.body.scrollHeight"))
+            for i in range(1, total_height, 20):
+                self.driver.execute_script("window.scrollTo(0, {});".format(i))
+            ilosc_ofert = self.driver.find_element(By.CLASS_NAME, "js_normal-offers")
+            ilosc = len(ilosc_ofert.find_elements(By.XPATH, "./li"))
+            for numerek in range(1, ilosc+1):
+                attributes = {}
+                attributes["nazwa"] = self.driver.find_element(
+                    By.CLASS_NAME, "product-top__product-info__name"
+                ).text
+                if ilosc > 1:
+                    sklep = ilosc_ofert.find_element(By.XPATH, f"./li[{numerek}]")
+                else:
+                    sklep = ilosc_ofert.find_element(
+                        By.XPATH, f"./li/div/div[1]/div[1]/div[3]"
+                    )
+                if sklep.get_attribute("class") == "product-offers__list__ado-item ado-common":
+                    continue
+                cena = (
+                    sklep.find_element(By.CLASS_NAME, "value").text
+                    + sklep.find_element(By.CLASS_NAME, "penny").text
+                ).replace(" ","").replace(",", ".")
+                cena = float(cena)
+                attributes["cena"] = cena
+                element = self.driver.find_element(
+                    By.CLASS_NAME, "gallery-carousel__media-container"
                 )
-            cena = (
-                sklep.find_element(By.CLASS_NAME, "value").text
-                + sklep.find_element(By.CLASS_NAME, "penny").text
-            ).replace(" ","").replace(",", ".")
-            cena = float(cena)
-            attributes["cena"] = cena
-            element = self.driver.find_element(
-                By.CLASS_NAME, "gallery-carousel__media-container"
-            )
-            attributes["img_src"] = element.find_element(
-                By.XPATH, "./div/div[1]/a/img"
-            ).get_attribute("src")
-            dostawa = sklep.find_element(By.CLASS_NAME, "product-delivery-info")
-            cena_dostawy = dostawa.text
-            if cena_dostawy[:9] != "Z wysyłką":
-                if cena_dostawy.lower() == "szczegóły dostawy":
-                    cena_dostawy = 9.00
+                attributes["img_src"] = element.find_element(
+                    By.XPATH, "./div/div[1]/a/img"
+                ).get_attribute("src")
+                dostawa = sklep.find_element(By.CLASS_NAME, "product-delivery-info")
+                cena_dostawy = dostawa.text
+                if cena_dostawy[:9] != "Z wysyłką":
+                    if cena_dostawy.lower() == "szczegóły dostawy":
+                        cena_dostawy = 9.00
+                    try:
+                        pom = dostawa.find_element(
+                            By.CLASS_NAME, "free-delivery-label"
+                        ).text
+                        if pom.lower() == "darmowa wysyłka":
+                            cena_dostawy = 0.00
+                    except selenium.common.exceptions.NoSuchElementException:
+                        pass
+                else:
+                    cena_dostawy = float(cena_dostawy[12:19].replace(",", ".")) - cena
+                attributes["cena dostawy"] = cena_dostawy
+                if ilosc == 1:
+                    sklep = ilosc_ofert.find_element(By.XPATH, f"./li")
+                attributes["sklep"] = (
+                    sklep.find_element(
+                        By.CLASS_NAME, "js_product-offer-link"
+                    ).get_attribute("innerHTML")
+                ).replace("Dane i opinie o ", "")
+                linkv1 = "www.ceneo.pl" + sklep.find_element(
+                    By.CLASS_NAME, "product-offer__container"
+                ).get_attribute("data-click-url")
                 try:
-                    pom = dostawa.find_element(
-                        By.CLASS_NAME, "free-delivery-label"
-                    ).text
-                    if pom.lower() == "darmowa wysyłka":
-                        cena_dostawy = 0.00
-                except selenium.common.exceptions.NoSuchElementException:
+                    attributes["link"] = pyshorteners.Shortener().tinyurl.short(linkv1)
+                except:
                     pass
-            else:
-                cena_dostawy = float(cena_dostawy[12:19].replace(",", ".")) - cena
-            attributes["cena dostawy"] = cena_dostawy
-            if ilosc == 1:
-                sklep = ilosc_ofert.find_element(By.XPATH, f"./li")
-            attributes["sklep"] = (
-                sklep.find_element(
-                    By.CLASS_NAME, "js_product-offer-link"
-                ).get_attribute("innerHTML")
-            ).replace("Dane i opinie o ", "")
-            linkv1 = "www.ceneo.pl" + sklep.find_element(
-                By.CLASS_NAME, "product-offer__container"
-            ).get_attribute("data-click-url")
-            try:
-                attributes["link"] = pyshorteners.Shortener().tinyurl.short(linkv1)
-            except:
-                pass
-            products.append(attributes)
-        return products
+                products.append(attributes)
+            return products

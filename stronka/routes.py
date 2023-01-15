@@ -120,9 +120,10 @@ def get_ceneo():
     zwrot = {}
     if params != None:
         lista = params.split(",")
-        obj = SearchHistory(user_id=current_user.id, items=params)
-        db.session.add(obj)
-        db.session.commit()
+        if 'logged_in' in session:
+            obj = SearchHistory(user_id=current_user.id, items=params)
+            db.session.add(obj)
+            db.session.commit()
     else:
         filenames = os.listdir(app.config['UPLOAD_FOLDER'])
         user_filenames = [f for f in filenames if f.startswith('lista')]
