@@ -76,7 +76,7 @@ def signin_page():
         db.session.commit()
         send_verification_email(
             user_to_create.email_address,
-            f"http://localhost:5000/verify?token={user_to_create.verification_token}",
+            f"http://10.160.73.90:5000/verify?token={user_to_create.verification_token}",
         )
         session['logged_in'] = True
         flash(
