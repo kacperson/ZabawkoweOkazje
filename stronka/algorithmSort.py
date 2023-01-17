@@ -1,114 +1,96 @@
 import json
-import collections
-import itertools
+import itertools as it
 
 
-class SortingAlgorithm:
+class ProductGrouping:
     def __init__(self, products):
-        self.products = self.sort_by_price(products)
-        searched = []
-        for product in self.products:
-            if product['nazwa'] not in searched:
-                searched.append(product['nazwa'])
+        self.products = products
 
-        self.isFound = {item: 0 for item in searched}
-        self.productsInBlocks = {}
-        self.searchedQTY = len(searched)
-
-    def resetSearched(self):
-        temp = self.isFound.keys()
-        self.isFound = {item: 0 for item in temp}
-        self.productsInBlocks = {}
-
-    def agregateBy(self, key):
-        for product in self.products:
-            if self.productsInBlocks.get(product[key]) != None:
-                self.productsInBlocks[product[key]].append(product)
-            else:
-                self.productsInBlocks[product[key]] = []
-                self.productsInBlocks[product[key]].append(product)
+    def group_by(self, key_e):
+        return {key: list(group) for key, group in it.groupby(sorted(self.products, key=lambda x: x[key_e]), key=lambda x: x[key_e])}
 
     def sort_by_price(self, products):
-        sorted_products = sorted(products, key=lambda x: x["cena"])
-        for i, product in enumerate(sorted_products):
-            product["ID"] = i
-        return sorted_products
+        return sorted(products, key=lambda x: x["cena"])
 
-    def show(self):
-        print(json.dumps(self.productsInBlocks, indent=2))
+    def sort_by_shop_count(self, group_by_shop):
+        return {shop: group for shop, group in sorted(group_by_shop.items(), key=lambda x: len(x[1]), reverse=True)}
 
-    def dataIntoSets(self):
-        ### the fewest shops
-        self.resetSearched()
-        DataTFS = {}
-        self.agregateBy("sklep")
+    def sort_by_shop_sum(self, group_by_shop):
+        return {shop: group for shop, group in
+                sorted(group_by_shop.items(), key=lambda x: sum(item['cena'] for item in x[1]))}
 
-        tempDict = {
-            tempVendorName: len(self.productsInBlocks[tempVendorName])
-            for tempVendorName in self.productsInBlocks
-        }
-        tempDict = collections.OrderedDict(sorted(tempDict.items()))
-        tempDict = {
-            tempVendorName: self.productsInBlocks[tempVendorName]
-            for tempVendorName in tempDict
-        }
 
-        self.productsInBlocks = tempDict
-        itemsCounter = 0
+class ProductsWithFewestShops:
+    def __init__(self, products):
+        self.products = products
+        self.searched = []
+        self.searchedQTY = 0
+        self.isFound = {}
 
+    def get_unique_products(self):
+        for product in self.products:
+            if product['nazwa'] not in self.searched:
+                self.searched.append(product['nazwa'])
+        self.searchedQTY = len(self.searched)
+        self.isFound = {item: 0 for item in self.searched}
+
+    def get_products(self):
+        self.get_unique_products()
+        group_by_shop = ProductGrouping(self.products).sort_by_shop_count(
+            ProductGrouping(self.products).group_by("sklep"))
         tempList = []
-        DataTFS["products"] = []
-        for _, vendorItems in self.productsInBlocks.items():
+        itemsCounter = 0
+        for _, vendorItems in group_by_shop.items():
             for item in vendorItems:
                 if not self.isFound[item["nazwa"]]:
                     self.isFound[item["nazwa"]] = 1
                     itemsCounter += 1
-                    DataTFS["products"].append(item)
+                    tempList.append(item)
             if itemsCounter == self.searchedQTY:
                 break
-        
+        return tempList
 
-        # print(json.dumps(DataTFS,indent=2))
 
-        ### the lowest price
+class ProductsWithLowestPrice:
 
-        self.resetSearched()
-        self.agregateBy("nazwa")
+    def __init__(self, products):
+        self.products = products
+        self.combinationsOfItems = []
+        self.DataTLP = {}
+        self.listOfVendors = []
 
+    def get_combinations(self):
+        group_by_name = ProductGrouping(self.products).group_by("nazwa")
         tempList = [
-            [item["ID"] for item in self.productsInBlocks[nazwa]]
-            for nazwa in self.productsInBlocks
+            [item["ID"] for item in group_by_name[nazwa]]
+            for nazwa in group_by_name
         ]
-        combinationsOfItems = list(itertools.product(*tempList))
+        self.combinationsOfItems = list(it.product(*tempList))
 
-        DataTLP = {}
-        listOfVendors = []
-
-        for combination in combinationsOfItems:
+    def get_products(self):
+        self.get_combinations()
+        for combination in self.combinationsOfItems:
             fullPrice = 0
             for itemId in combination:
                 fullPrice += self.products[itemId]["cena"]
-                if not self.products[itemId]["sklep"] in listOfVendors:
-                    listOfVendors.append(self.products[itemId]["sklep"])
+                if not self.products[itemId]["sklep"] in self.listOfVendors:
+                    self.listOfVendors.append(self.products[itemId]["sklep"])
                     fullPrice += self.products[itemId]["cena dostawy"]
-            DataTLP[combination] = fullPrice
-        DataTLP = sorted(DataTLP.items(), key=lambda x: x[1])[0]
+            self.DataTLP[combination] = fullPrice
+        self.DataTLP = sorted(self.DataTLP.items(), key=lambda x: x[1])[0]
         products = []
-        for id in DataTLP[0]:
+        for id in self.DataTLP[0]:
             products.append(self.products[id])
-        DataTLP = {}
-        DataTLP["products"] = products
-        sorted(products, key=lambda x: x["cena"])
-        return {"TFS": sorted(DataTFS["products"], key=lambda x: x["sklep"]), "TLP":sorted(DataTLP["products"], key=lambda x: x["sklep"])}
+        return ProductGrouping(products).sort_by_price(products)
 
 
 if __name__ == "__main__":
-    searchingFor = ["Klocki Lego 123456", "Motorek", "Book"]
     f = open("./produkty.json")
     products = json.load(f)["products"]
     f.close()
-    #print(products)
-    sortowanie = SortingAlgorithm(products)
-    # sortowanie.agregateBy("vendor")
-    # sortowanie.show()
-    print(json.dumps(sortowanie.dataIntoSets(), indent=2))
+    TLP = ProductsWithLowestPrice(products)
+    TFS = ProductsWithFewestShops(products)
+    print("TLP")
+    print(json.dumps(TLP.get_products(), indent=2))
+    print("TFS")
+    print(json.dumps(TFS.get_products(), indent=2))
