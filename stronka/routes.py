@@ -13,7 +13,7 @@ from stronka.forms import RegisterForm, LoginForm
 from stronka.models import User, SearchHistory
 from stronka import db
 from stronka.ceneo.main import ceneo_scrapper
-from stronka.algorithmSort import SortingAlgorithm
+import stronka.algorithmSort as alg
 import json
 
 
@@ -185,16 +185,11 @@ def upload():
 def algo():
     data = {}
     if request.method == "POST":
-        print("dupa")
         data = json.loads(request.get_data().decode())
-        #print(json.dump(data, indent=2))
-        #print(data)
         products = data.get('products')
-        #print(products)
-        sortowanie = SortingAlgorithm(products)
-        data = sortowanie.dataIntoSets()
-        # print(json.dumps(data[0], indent=2))
-        # print(data[1])
+        data = {}
+        data["TLP"] = alg.ProductsWithLowestPrice(products)
+        data["TFS"] = alg.ProductsWithFewestShops(products)
         if 'logged_in' in session:
             with open(os.path.join(app.config['EXPORT_FOLDER'], current_user.username), "w") as file:
                 json.dump(data, file, indent=4)

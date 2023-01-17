@@ -225,6 +225,10 @@
                     products.push(found[i]);
                 }
             }
+            const uniqueValues = [...new Set(products.map(item => item['nazwa']))];
+            if (uniqueValues.length == params.length){
+              algorithm(products)
+            }
         }
         if (Object.keys(notFound).length != 0) {
             for (let i = 0; i < params.length; i++) {
@@ -284,6 +288,9 @@ function createTable(rows, json, string) {
     }
 
     function searchv2(clickedId) {
+      console.log(clickedId)
+      if (clickedId != -1){
+
         const name = document.getElementById(clickedId).getAttribute('nazwa');
         const string = document.getElementById(clickedId).getAttribute('data-string');
         const params = {params: name};
@@ -319,6 +326,9 @@ function createTable(rows, json, string) {
                 }
             }
         });
+      } else {
+        algorithm(products);
+      }
     }
 
     function deleteExisting(string) {
