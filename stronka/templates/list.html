@@ -198,7 +198,7 @@
                 if (notFound[params[i]] != undefined) {
                     createName(params[i]);
                     const productDetails = notFound[params[i]];
-                    createTable(Object.keys(productDetails).length, productDetails);
+                    createTable(Object.keys(productDetails).length, productDetails, params[i]);
                 }
             }
         }
@@ -206,9 +206,10 @@
         algorithm(products);
     }
 
-    function createTable(rows, json) {
+    function createTable(rows, json, string) {
         const table = document.createElement('table');
         table.setAttribute("id", "table");
+        table.setAttribute("data-string", string);
         const tbody = document.createElement('tbody');
         for (let i = 0; i < rows-1; i += 2) {
             let tr = document.createElement('tr');
@@ -220,6 +221,7 @@
             const img = `num${i}`;
             button.id = json[key].toString().replace(/\s+/g,'-');
             button.setAttribute('nazwa', json[key])
+            button.setAttribute("data-string", string);
             button.innerHTML = `<img src="${json[img]}">` + `<br>` + json[key];
             button.addEventListener("click",()=>{
                 searchv2(button.id);
@@ -256,6 +258,7 @@
         const mainDiv = document.createElement('div');
         mainDiv.setAttribute("align", "center");
         mainDiv.setAttribute("id", "mytable");
+        mainDiv.setAttribute("data-string", string);
         const heading = document.createElement('h4');
         heading.textContent = `Wybierz jedną z opcji, ponieważ hasło ${string} nie jest wystarczające`;
         mainDiv.appendChild(heading);
@@ -264,8 +267,9 @@
 
     function searchv2(clickedId) {
         const name = document.getElementById(clickedId).getAttribute('nazwa');
+        const string = document.getElementById(clickedId).getAttribute('data-string');
         const params = {params: name};
-        deleteExisting();
+        deleteExisting(string);
         fetch('/ceneo', {
             method: 'POST',
             headers: {
@@ -292,16 +296,15 @@
                     if (list['nieznalezione'][params[i]] != undefined) {
                         createName(params[i]);
                         const productDetails = list['nieznalezione'][params[i]];
-                        createTable(Object.keys(productDetails).length, productDetails);
+                        createTable(Object.keys(productDetails).length, productDetails, params[i]);
                     }
                 }
             }
         });
     }
 
-    function deleteExisting() {
-      $("#mytable").remove();
-      $("#table").remove();
+    function deleteExisting(string) {
+        $("[data-string='"+string+"']").remove();
     }
 
     function deletetab() {
