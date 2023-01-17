@@ -504,3 +504,29 @@ main banner
 	background: none;
 	border: none;
 }
+
+footer {
+  position: relative;
+  overflow: hidden;
+  box-shadow: 8.0px 16.0px 16.0px hsl(0deg 0% 0% / 0.25);
+  padding:40px;
+  margin: 0px 20px 20px 20px; /* top, right, bottom, left */
+  border-radius: 25px;
+background: rgb(133, 172, 227);
+
+}
+
+footer input {
+  border: none !important;
+}
+
+.text-footer-head {
+  color: #fff;
+  font-weight: bold;
+  font-size: 30px;
+}
+
+.text-footer {
+  color: #fff;
+}
+

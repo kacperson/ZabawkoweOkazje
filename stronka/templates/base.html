@@ -45,8 +45,8 @@
               <div class="menu mr-auto">
                 <ul class="nav">
                   <li class="scroll-to-section"><a href="/home" class="active">Strona Główna</a></li>
-                  <li class="scroll-to-section" ><a type="button" onclick="scrolldiv()">O nas</a></li>
-                  <li class="scroll-to-section"><a href="/contact">Kontakt</a></li>
+                  {% block navbar %}  {% endblock %}
+
 
 
                 </ul>
@@ -104,12 +104,10 @@
         {% endif %}
       {% endwith %}
   </header>
-<script>
-    function scrolldiv(){
-        window.scroll(0,800);
-    }
-</script>
 {% block content %}
+{% endblock %}
+
+{% block footer %}
 {% endblock %}
 
 {% block scripts %}

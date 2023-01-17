@@ -12,7 +12,7 @@ def send_verification_email(to, link):
     smtpserver.login(sender, password)
 
     message = """\
-    Kliknij w poniższy link aby aktywować konto Zabawkowe Okazje:
+    Kliknij w poniższy link aby aktywować konto Zabawkowe Okazje:`
     <a href="{}">{}</a>
     """.format(
         link, link
