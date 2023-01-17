@@ -5,9 +5,17 @@ from stronka.ceneo.my_ceneo import Ceneo
 
 def ceneo_scrapper(list):
     listy_propozycji = {}
-    produkty = []
+    produkty = []   
+    user_agent = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.50 Safari/537.36'
     options = Options()
-    driver = webdriver.Chrome(executable_path="chromedriver.exe", options=options)
+    options.add_argument("--headless")
+    options.add_argument("--disable-popup-blocking")
+    options.add_argument('--disable-dev-shm-usage')
+    options.add_argument('--no-sandbox')
+    options.add_argument(f'user-agent={user_agent}')
+
+    driver = webdriver.Chrome(executable_path="./chromedriver", options=options)
+    
     driver.maximize_window()
     bot = Ceneo(driver)
     pierwszy = True
