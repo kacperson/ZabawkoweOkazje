@@ -188,8 +188,8 @@ def algo():
         data = json.loads(request.get_data().decode())
         products = data.get('products')
         data = {}
-        data["TLP"] = alg.ProductsWithLowestPrice(products)
-        data["TFS"] = alg.ProductsWithFewestShops(products)
+        data["TLP"] = alg.ProductsWithLowestPrice(products).get_products()
+        data["TFS"] = alg.ProductsWithFewestShops(products).get_products()
         if 'logged_in' in session:
             with open(os.path.join(app.config['EXPORT_FOLDER'], current_user.username), "w") as file:
                 json.dump(data, file, indent=4)

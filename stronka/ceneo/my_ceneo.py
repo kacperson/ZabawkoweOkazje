@@ -90,6 +90,8 @@ class Ceneo:
         try:
             element = self.driver.find_element(By.CLASS_NAME, "show-remaining-offers__trigger")
             self.driver.execute_script("arguments[0].click()", element)
+        except selenium.common.exceptions.NoSuchElementException:
+            pass
         finally:
             total_height = int(self.driver.execute_script("return document.body.scrollHeight"))
             for i in range(1, total_height, 20):
@@ -113,8 +115,7 @@ class Ceneo:
                     sklep.find_element(By.CLASS_NAME, "value").text
                     + sklep.find_element(By.CLASS_NAME, "penny").text
                 ).replace(" ","").replace(",", ".")
-                cena = float(cena)
-                attributes["cena"] = cena
+                attributes["cena"] = float(cena)
                 element = self.driver.find_element(
                     By.CLASS_NAME, "gallery-carousel__media-container"
                 )
@@ -130,12 +131,14 @@ class Ceneo:
                         pom = dostawa.find_element(
                             By.CLASS_NAME, "free-delivery-label"
                         ).text
+                        print(pom)
                         if pom.lower() == "darmowa wysyłka":
                             cena_dostawy = 0.00
                     except selenium.common.exceptions.NoSuchElementException:
                         pass
                 else:
-                    cena_dostawy = float(cena_dostawy[12:19].replace(",", ".")) - cena
+                    cena_dostawy = float(cena_dostawy[12:19].replace(",", ".")) - float(cena)
+                print(cena_dostawy)
                 attributes["cena dostawy"] = cena_dostawy
                 if ilosc == 1:
                     sklep = ilosc_ofert.find_element(By.XPATH, f"./li")
