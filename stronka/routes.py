@@ -185,7 +185,7 @@ def upload():
 def algo():
     data = {}
     if request.method == "POST":
-        
+        print("dupa")
         data = json.loads(request.get_data().decode())
         #print(json.dump(data, indent=2))
         #print(data)

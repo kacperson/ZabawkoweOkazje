@@ -4,17 +4,14 @@ import itertools
 
 
 class SortingAlgorithm:
-    def __init__(self, products=None):
-        self.products = products
+    def __init__(self, products):
+        self.products = self.sort_by_price(products)
         searched = []
         for product in self.products:
             if product['nazwa'] not in searched:
                 searched.append(product['nazwa'])
 
         self.isFound = {item: 0 for item in searched}
-        #f = open("produkty.json")
-        #self.products = json.load(f)["products"]
-        #f.close()
         self.productsInBlocks = {}
         self.searchedQTY = len(searched)
 
@@ -30,6 +27,12 @@ class SortingAlgorithm:
             else:
                 self.productsInBlocks[product[key]] = []
                 self.productsInBlocks[product[key]].append(product)
+
+    def sort_by_price(self, products):
+        sorted_products = sorted(products, key=lambda x: x["cena"])
+        for i, product in enumerate(sorted_products):
+            product["ID"] = i
+        return sorted_products
 
     def show(self):
         print(json.dumps(self.productsInBlocks, indent=2))
@@ -53,18 +56,18 @@ class SortingAlgorithm:
         self.productsInBlocks = tempDict
         itemsCounter = 0
 
-        for vendorName, vendorItems in self.productsInBlocks.items():
+        tempList = []
+        DataTFS["products"] = []
+        for _, vendorItems in self.productsInBlocks.items():
             for item in vendorItems:
                 if not self.isFound[item["nazwa"]]:
                     self.isFound[item["nazwa"]] = 1
                     itemsCounter += 1
-                    if DataTFS.get(vendorName) != None:
-                        DataTFS[vendorName].append(item)
-                    else:
-                        DataTFS[vendorName] = []
-                        DataTFS[vendorName].append(item)
+                    DataTFS["products"].append(item)
             if itemsCounter == self.searchedQTY:
                 break
+        
+
         # print(json.dumps(DataTFS,indent=2))
 
         ### the lowest price
@@ -91,18 +94,21 @@ class SortingAlgorithm:
             DataTLP[combination] = fullPrice
         DataTLP = sorted(DataTLP.items(), key=lambda x: x[1])[0]
         products = []
-        cost = DataTLP[1]
         for id in DataTLP[0]:
             products.append(self.products[id])
         DataTLP = {}
         DataTLP["products"] = products
-        DataTLP["cost"] = cost
-        return {"TFS": DataTFS, "TLP":DataTLP}
+        sorted(products, key=lambda x: x["cena"])
+        return {"TFS": sorted(DataTFS["products"], key=lambda x: x["sklep"]), "TLP":sorted(DataTLP["products"], key=lambda x: x["sklep"])}
 
 
 if __name__ == "__main__":
     searchingFor = ["Klocki Lego 123456", "Motorek", "Book"]
-    sortowanie = SortingAlgorithm(searched=searchingFor)
+    f = open("./produkty.json")
+    products = json.load(f)["products"]
+    f.close()
+    #print(products)
+    sortowanie = SortingAlgorithm(products)
     # sortowanie.agregateBy("vendor")
     # sortowanie.show()
-    print(sortowanie.dataIntoSets())
+    print(json.dumps(sortowanie.dataIntoSets(), indent=2))

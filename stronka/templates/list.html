@@ -46,8 +46,8 @@
                     </header>
                     <div class="section-body">
                         <ul class="menu-list">
-                          <li class="menu-group"><a class="text-underlined">Ceny</a></li>
-                          <li class="menu-group"><a class="text-underlined">Nazwy</a></li>
+                          <li class="menu-group"><a type="button" onclick="sortByPrice();">Ceny</a></li>
+                          <li class="menu-group"><a type="button" onclick="sortByShop();">Sklepy</a></li>
                         </ul>
                     </div>
                 </section>
@@ -77,6 +77,7 @@
 <script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
 <script>
     products = [];
+    algorithmData ={};
 
     $(document).ready(function(){
         $(".dropzone").dropzone({
@@ -161,6 +162,18 @@
         table.insertAdjacentHTML('beforeend', rowsHTML);
     }
 
+    function sortByPrice(){
+      deletetab()
+      robienietabeli()
+      dodawanieDoTabeli(algorithmData["TLP"])
+    }
+
+    function sortByShop(){
+      deletetab()
+      robienietabeli()
+      dodawanieDoTabeli(algorithmData["TFS"])
+    }
+
     function searchbyfile(){
         const mydiv = document.getElementById("list");
         mydiv.style.display = "block";
@@ -180,13 +193,31 @@
         });
     }
 
+    function search(){
+      const mydiv = document.getElementById("list");
+      mydiv.style.display = "block";
+      let params = {params: document.getElementById("choices-text-preset-values").value};
+      fetch('/ceneo', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(
+            params,
+        )
+      })
+      .then(response => response.json())
+      .then(lista => {
+          findProduct(lista)
+      });
+    }
+
     function findProduct(list) {
         let params = list["nazwy"];
-        let products = [];
         let notFound = list["nieznalezione"];
         let found = list["znalezione"];
         
-        if (found != undefined) {
+        if (Object.keys(found).length != 0) {
             for (let i = 0; i <= found.length; i++) {
                 if (found[i] != undefined) {
                     products.push(found[i]);
@@ -202,8 +233,6 @@
                 }
             }
         }
-        robienietabeli();
-        algorithm(products);
     }
 
     function createTable(rows, json, string) {
@@ -234,25 +263,6 @@
         document.getElementById("centered").appendChild(table);
     }
 
-
-    function search(){
-      const mydiv = document.getElementById("list");
-      mydiv.style.display = "block";
-      let params = {params: document.getElementById("choices-text-preset-values").value};
-      fetch('/ceneo', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(
-            params,
-        )
-      })
-      .then(response => response.json())
-      .then(lista => {
-          findProduct(lista)
-      });
-    }
 
     function createName(string) {
         const mainDiv = document.createElement('div');
@@ -323,8 +333,22 @@
         }
       }).then(response => response.json())
         .then(data => {
-            dodawanieDoTabeli(data['TLP']['products'])
-        })
+                algorithmData = data;
+              });
+    }
+
+    function deleteExisting() {
+      $("#mytable").remove();
+      $("#table").remove();
+    }
+
+    function MakeTalbe(){
+      deletetab()
+      
+    }
+
+    function deletetab() {
+      $("#tabelawynikow").remove();
     }
 
     </script>
