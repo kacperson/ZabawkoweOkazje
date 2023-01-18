@@ -14,7 +14,7 @@ def ceneo_scrapper(list):
     options.add_argument('--no-sandbox')
     options.add_argument(f'user-agent={user_agent}')
 
-    driver = webdriver.Chrome(executable_path="./chromedriver", options=options)
+    driver = webdriver.Chrome(executable_path="/code/stronka/ceneo/chromedriver", options=options)
     
     driver.maximize_window()
     bot = Ceneo(driver)
