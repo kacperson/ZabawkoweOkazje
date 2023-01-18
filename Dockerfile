@@ -11,6 +11,7 @@ RUN apt-get install ./google-chrome-stable_current_amd64.deb -y
 RUN pip install psycopg2-binary
 RUN pip install -r requirements.txt
 COPY . /code/
+RUN chmod 7777 /code/stronka/ceneo/chromedriver
 RUN cp -r /code/stronka /usr/local/lib/python3.8/dist-packages
 
 CMD [ "python3", "app.py" ]
