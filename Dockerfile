@@ -12,7 +12,7 @@ RUN pip install psycopg2-binary
 RUN pip install -r requirements.txt
 COPY . /code/
 WORKDIR /code/stronka/ceneo
-RUN wget https://chromedriver.storage.googleapis.com/109.0.5414.74/chromedriver_linux64.zip
+RUN wget --inet4-only https://chromedriver.storage.googleapis.com/109.0.5414.74/chromedriver_linux64.zip
 RUN unzip -o chromedriver_linux64.zip
 RUN cp -r /code/stronka /usr/local/lib/python3.10/dist-packages
 WORKDIR /code
