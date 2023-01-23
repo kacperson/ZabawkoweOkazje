@@ -23,7 +23,7 @@ Projekt ma na celu zbudowanie aplikacji webowej, która ma ułatwić zakupy inte
 `nazwa1, nazwa2, nazwa3, ..., nazwan`
 
 ### lokalna baza danych
-![image](https://user-images.githubusercontent.com/48855984/202875828-defdb5cf-73ba-45fd-b48b-4b2647d95c05.png)
+![image](https://user-images.githubusercontent.com/48855984/214115030-ef674153-a5af-438d-8e5b-31c1d2ed717c.png)
 
 ### zasada działania (wstępna)
 Otrzymujemy pliki.json, łączymy w megaliste, wyniki wyświetlamy domyślnie posortowane po cenie (osobno różne typy zabawek), jeżeli będzie sortowanie po dostawcy to wyniki od tych samych dostawców się mergują.
