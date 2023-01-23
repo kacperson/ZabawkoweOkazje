@@ -66,11 +66,11 @@ def signin_page():
     form = RegisterForm()
     if form.validate_on_submit():
         user_to_create = User(
-            username=form.username.data,
-            email_address=form.email_address.data,
-            password=form.password1.data,
-            active=False,
-            verification_token=secrets.token_hex(16),
+            username = form.username.data,
+            email_address = form.email_address.data,
+            password = form.password1.data,
+            active = False,
+            verification_token = secrets.token_hex(16),
         )
         db.session.add(user_to_create)
         db.session.commit()

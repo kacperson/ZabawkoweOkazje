@@ -16,8 +16,21 @@ class ProductGrouping:
         return {shop: group for shop, group in sorted(group_by_shop.items(), key=lambda x: len(x[1]), reverse=True)}
 
     def sort_by_shop_sum(self, group_by_shop):
-        return {shop: group for shop, group in
-                sorted(group_by_shop.items(), key=lambda x: sum(item['cena'] for item in x[1]))}
+        new_data = {}
+        for shop, products in group_by_shop.items():
+            size = len(products)
+            if size not in new_data:
+                new_data[size] = {}
+            new_data[size][shop] = products
+
+        for size, shops in new_data.items():
+            new_data[size] = {shop: products for shop, products in sorted(shops.items(), key=lambda x: sum(p["cena"] for p in x[1]))}
+
+        original_data = {}
+        for size, shops in new_data.items():
+            for shop, products in shops.items():
+                original_data[shop] = products
+        return original_data
 
 
 class ProductsWithFewestShops:
@@ -38,6 +51,8 @@ class ProductsWithFewestShops:
         self.get_unique_products()
         group_by_shop = ProductGrouping(self.products).sort_by_shop_count(
             ProductGrouping(self.products).group_by("sklep"))
+        print(json.dumps(group_by_shop, indent=2))
+        group_by_shop = ProductGrouping(self.products).sort_by_shop_sum(group_by_shop)
         tempList = []
         itemsCounter = 0
         for _, vendorItems in group_by_shop.items():
@@ -75,7 +90,7 @@ class ProductsWithLowestPrice:
                 fullPrice += self.products[itemId]["cena"]
                 if not self.products[itemId]["sklep"] in self.listOfVendors:
                     self.listOfVendors.append(self.products[itemId]["sklep"])
-                    fullPrice += self.products[itemId]["cena dostawy"]
+                    fullPrice += self.products[itemId]["cena_dostawy"]
             self.DataTLP[combination] = fullPrice
         self.DataTLP = sorted(self.DataTLP.items(), key=lambda x: x[1])[0]
         products = []
@@ -90,7 +105,7 @@ if __name__ == "__main__":
     f.close()
     TLP = ProductsWithLowestPrice(products)
     TFS = ProductsWithFewestShops(products)
-    print("TLP")
-    print(json.dumps(TLP.get_products(), indent=2))
+    # print("TLP")
+    # print(json.dumps(TLP.get_products(), indent=2))
     print("TFS")
     print(json.dumps(TFS.get_products(), indent=2))

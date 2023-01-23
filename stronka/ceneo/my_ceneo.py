@@ -58,7 +58,7 @@ class Ceneo:
                 By.XPATH, f'./div[@data-position="{numer-1}"]'
             )
             attributes["cena"] = float(sklep.get_attribute("data-price").replace(",", "."))
-            attributes["cena dostawy"] = 0
+            attributes["cena_dostawy"] = 0
             attributes["sklep"] = (
                 sklep.get_attribute("data-shopurl")
                 .replace("https://", "", 1)
@@ -139,7 +139,7 @@ class Ceneo:
                 else:
                     cena_dostawy = float(cena_dostawy[12:19].replace(",", ".")) - float(cena)
                 print(cena_dostawy)
-                attributes["cena dostawy"] = cena_dostawy
+                attributes["cena_dostawy"] = cena_dostawy
                 if ilosc == 1:
                     sklep = ilosc_ofert.find_element(By.XPATH, f"./li")
                 attributes["sklep"] = (
