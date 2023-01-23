@@ -9,6 +9,8 @@ def ceneo_scrapper(list):
     user_agent = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.50 Safari/537.36'
     options = Options()
     options.add_argument("--headless")
+    WINDOW_SIZE = "1920,1080"
+    options.add_argument("--window-size=%s" % WINDOW_SIZE)
     options.add_argument("--disable-popup-blocking")
     options.add_argument('--disable-dev-shm-usage')
     options.add_argument('--no-sandbox')

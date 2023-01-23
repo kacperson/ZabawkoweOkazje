@@ -23,7 +23,7 @@ class Ceneo:
         if ilosc > 11:
             ilosc = 11
         if ilosc > 2:
-            for i in range(0, ilosc - 1):
+            for i in range(0, ilosc - 2):
                 xd.append(
                     lista_propozycji.find_element(
                         By.XPATH, f'./div[@data-position="{i}"]/div/div[1]/a/img'

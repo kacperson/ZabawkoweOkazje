@@ -22,18 +22,27 @@ ALLOWED_EXTENSIONS = set(["txt"])
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 app.config["EXPORT_FOLDER"] = EXPORT_FOLDER
 
+# The UPLOAD_FOLDER variable is used to specify the directory where uploaded files will be stored.
+# The EXPORT_FOLDER variable is used to specify the directory where exported files will be stored.
+# The ALLOWED_EXTENSIONS variable is used to specify the file extensions that are allowed to be uploaded.
+# The app.config["UPLOAD_FOLDER"] and app.config["EXPORT_FOLDER"] lines set the previously defined variables as
+# configurations for the app.
 
+# The home_page() function renders the home page of the website when the "/" or "/home" route is accessed.
 @app.route("/")
 @app.route("/home")
 def home_page():
     return render_template("index.html")
 
-
+# The list_page() function renders the list page of the website when the "/list" route is accessed.
 @app.route("/list", methods=["POST", "GET"])
 def list_page():
     return render_template("list.html")
 
 
+# The login_page() function handles the form submission for logging in and verifies the entered username and password
+# against the database. If the login is successful, the user is logged in and redirected to the home page.
+# If it fails, an error message is displayed.
 @app.route("/login", methods=["GET", "POST"])
 def login_page():
     form = LoginForm()
@@ -92,6 +101,7 @@ def signin_page():
     return render_template("signin.html", form=form)
 
 
+#  verify() -  verifies the user's email address
 @app.route("/verify")
 def verify():
     token = request.args.get("token")
