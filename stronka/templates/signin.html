@@ -1,5 +1,8 @@
 {% extends 'base.html' %}
 
+<!-- ***** signin.html is a form that can be filled be a new user ***** -->
+{#  shows up only if user is not logged in  #}
+
 {% block content %}
 <main>
     <div class="background-login">
@@ -7,6 +10,7 @@
             <div class="screen">
                 <div class="screen__content">
                     <a class="backhome" href="/home"><i class="fa-solid fa-arrow-left-long fa-lg"></i></a>
+                    <!-- ***** Signin form ***** -->
                     <form method="POST" class="login__menu">
                         {{ form.hidden_tag() }}
                         <div class="signin__field">
@@ -31,6 +35,8 @@
                         </button>
                     </form>
                 </div>
+
+                <!-- ***** Sign-in background ***** -->
                 <div class="screen__background">
                     <span class="screen__background__shape screen__background__shape4"></span>
                     <span class="screen__background__shape screen__background__shape3"></span>

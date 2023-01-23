@@ -2,11 +2,10 @@
 <html lang="en">
 
   <head>
-
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
+   <!-- Site Metas -->
+    <meta name="description" content="Toys searcher">
+    <meta name="author" content="K.Bojanowski, K.Handzlik, B.Szymanski, D.Dobrowolski, F.Garzel">
     <link rel="preconnect" href="https://fonts.gstatic.com">
 
     <title>Zabawkowe Okazje</title>
@@ -41,21 +40,17 @@
               <a href="/home" class="logo">
               <h1><img src="../static/image/logo-icon.png" alt=""></h1>
             </a>
-
             <!-- ***** Menu ***** -->
               <div class="menu mr-auto">
                 <ul class="nav">
                   <li class="scroll-to-section"><a href="/home" class="active">Strona Główna</a></li>
-                  {% block navbar %}  {% endblock %}
-
-
-
+                  {% block navbar %}
+                  {% endblock %}
                 </ul>
               </div>
-
-
               <div class="auth action-buttons ml-auto">
                   <ul class="nav-right">
+                        <!-- ***** href to list.html  ***** -->
                       <li>
                           <div class="nav-button">
                                 <a href="/list"><i class="fa-solid fa-magnifying-glass fa-fw fa-lg" ></i></a>
@@ -63,17 +58,20 @@
                       </li>
 
                       {% if not current_user.is_authenticated %}
+                          <!-- ***** href to login.html  ***** -->
                       <li>
                         <div class="nav-item dropdown">
                         <a href="/login" class="nav-link login mr-4">Zaloguj się</a>
                     </div>
                       </li>
+                          <!-- ***** href to signin.html  ***** -->
                       <li>
                         <div class="nav-item dropdown">
                         <a href="/signin" class="btn btn-primary sign-up-btn">Rejestracja</a>
                     </div>
                       </li>
                       {% elif current_user.is_authenticated  %}
+                          <!-- ***** href to history.html  ***** -->
                        <li>
                         <div class="nav-button">
                             <a href="/profile"> <i class="fa-solid fa-user fa-fw fa-lg" ></i></a>
@@ -92,6 +90,7 @@
         </div>
       </div>
     </div>
+  <!-- ***** Pop ups  ***** -->
   {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
            {% for category, message in messages %}
@@ -105,14 +104,18 @@
         {% endif %}
       {% endwith %}
   </header>
+
+<!-- ***** Content of the website  ***** -->
 {% block content %}
 {% endblock %}
 
+<!-- ***** Footer  ***** -->
 {% block footer %}
 {% endblock %}
 
+<!-- ***** Scripts used  ***** -->
 {% block scripts %}
-
 {% endblock %}
+
 </body>
 </html>

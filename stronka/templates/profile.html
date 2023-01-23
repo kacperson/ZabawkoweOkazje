@@ -1,7 +1,11 @@
 {% extends 'base.html' %}
 
+<!-- ***** Profile.html which contains history of products searched by the user logged in  ***** -->
+{#  shows up only if user is logged in  #}
+
 {% block content %}
     <main>
+        <!-- ***** History section - ***** -->
         <div class="background-profile  text-center">
             <h2>Historia wyszukiwania</h2>
             <div class="history container">
@@ -12,8 +16,8 @@
                             <th>Data</th>
                         </tr>
                     </thead>
+                    <!-- ***** tbody is filled with products searched ***** -->
                     <tbody>
-
                     </tbody>
                 </table>
             </div>
@@ -25,10 +29,12 @@
 {% block scripts %}
 <script src="https://kit.fontawesome.com/05a09beaf0.js" crossorigin="anonymous"></script>
 <script>
+
     window.addEventListener("load", ()=>{
     loadHistory();
     });
 
+    <!-- *****  ***** -->
     function loadHistory() {
         const HistoryTxt = document.querySelector(".history .table tbody")
         all_items = {{ history | tojson }}

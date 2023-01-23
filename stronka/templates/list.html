@@ -1,7 +1,9 @@
 {% extends 'base.html' %}
 
+<!-- ***** List.html which contains search bar and list of wanted products ***** -->
 {% block content %}
     <main>
+        <!-- ***** SEARCH SECTION ***** -->
         <div class="search text-center">
             <div class="container">
                 <div class="s004">
@@ -10,15 +12,15 @@
                       <legend>CZEGO SZUKASZ?</legend>
                         <p id="wpisz">Wpisz lub Dodaj plik tekstowy</p>
 
+                        <!-- ***** Search using file ***** -->
                       <div class="dropzone" id="plik" hidden="hidden">
                         <div class="dz-message needsclick">
                             <h1>Upuść pliki tutaj lub kliknij, aby przesłać.</h1>
                         </div>
                       </div>
-
                       <div>
-
                       </div>
+                      <!-- ***** Search using text ***** -->
                       <div class="inner-form" id="tekst">
                         <div class="input-field">
                           <input class="form-control" id="choices-text-preset-values" type="text" placeholder="Type to search..." />
@@ -38,28 +40,30 @@
             </div>
         </div>
 
+        <!-- ***** LIST SECTION ***** -->
         <div class="container main list text-center align-content-between" id="list">
             <div class=" posortuj" id="posortuj">
                  <div class="loader" id="loading">
                 </div>
+                <!-- ***** Panel with sorting ***** -->
                 <div class="panel">
                     <h5>Posortuj według:</h5>
-
                     <div class="section-body">
                         <ul class="menu-list">
                           <li class="menu-group"><a type="button" onclick="sortByPrice();">Ceny</a></li>
                           <li class="menu-group"><a type="button" onclick="sortByShop();">Sklepy</a></li>
                         </ul>
                     </div>
-
-                 </div>
-                 <div>
-                        {% if current_user.is_authenticated %}
-                            <a class="export" href="{{ url_for('getfile') }}">Export <i class="fa-solid fa-file-export"></i></a>
-                        {% endif %}
-                 </div>
+                </div>
+                <!-- ***** Export of a list of products ***** -->
+                <div>
+                    {% if current_user.is_authenticated %}
+                        <a class="export" href="{{ url_for('getfile') }}">Export <i class="fa-solid fa-file-export"></i></a>
+                    {% endif %}
+                </div>
             </div>
 
+            <!-- ***** List of products ***** -->
             <div class="list-panel" id="centered">
             </div>
 
@@ -67,8 +71,11 @@
     </main>
 {% endblock %}
 
-{% block scripts %}
+<!-- ***** Block with scripts used by list.html ***** -->
+{#  Choices - library for fancy multiple choices in search bar  #}
+{#  Dropzone - library for a dropzone for files                 #}
 
+{% block scripts %}
 <script src="https://kit.fontawesome.com/05a09beaf0.js" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
@@ -132,7 +139,7 @@
         return rows
     }
 
-
+    {# building table base #}
     function robienietabeli(){
         const ListTxt = document.querySelector('.list-panel')
 
@@ -150,6 +157,7 @@
         ListTxt.insertAdjacentHTML("beforeend", tableHTML);
     }
 
+    {#adding products to the base of the table #}
     function dodawanieDoTabeli(items) {
         if (document.getElementById('tabelawynikow') == null) {
           robienietabeli();
@@ -170,19 +178,27 @@
         table.insertAdjacentHTML('beforeend', rowsHTML);
     }
 
+    {#sorting by lowest price using algorithSort.py#}
     function sortByPrice(){
-      deletetab()
+      $("#tabelawynikow").remove();
       robienietabeli()
       dodawanieDoTabeli(algorithmData["TLP"])
     }
 
+    {#sorting by number of shops using algorithSort.py#}
     function sortByShop(){
-      deletetab()
+      $("#tabelawynikow").remove();
       robienietabeli()
       dodawanieDoTabeli(algorithmData["TFS"])
     }
 
+    {#searching products from files #}
+    {#fetching, showing list, finding products using Selenium scraper#}
     function searchbyfile(){
+        const ListTxt = document.querySelector('.list-panel')
+        if(ListTxt !== ""){
+            ListTxt.innerHTML = "";
+        }
         const mydiv = document.getElementById("list");
         mydiv.style.display = "block";
         const params = {params: null}
@@ -201,8 +217,13 @@
         });
     }
 
+    {#searching products from text field #}
+    {#fetching, finding products using Selenium scraper#}
     function search(){
-
+        const ListTxt = document.querySelector('.list-panel')
+        if(ListTxt !== ""){
+            ListTxt.innerHTML = "";
+        }
       const mydiv = document.getElementById("list");
       mydiv.style.display = "block";
       louder = document.getElementById("loading");
@@ -223,7 +244,7 @@
       });
     }
 
-
+    {# finding products, pushing results to sort algorithm or creating table of propositions  #}
     function findProduct(list) {
         let params = list["nazwy"];
         let notFound = list["nieznalezione"];
@@ -251,39 +272,41 @@
         }
     }
 
-function createTable(rows, json, string) {
-          louder = document.getElementById("loading");
-          louder.style.display="none";
-          var table = document.createElement('table');
-          table.setAttribute("id", "table");
-          table.setAttribute('data-string', string)  
-          var tbody = document.createElement('tbody');
-          for (var i = 0; i < rows-1; i=i+2) {
-            if (i == 10 || i == 0) {
-                var tr = document.createElement('tr');
+    {#  Creating list with propositions of products shown. Products can by picked by clicking them. #}
+    {#  After a selection of sorting type, table with selected toys will be shown.                  #}
+    function createTable(rows, json, string) {
+              louder = document.getElementById("loading");
+              louder.style.display="none";
+              var table = document.createElement('table');
+              table.setAttribute("id", "table");
+              table.setAttribute('data-string', string)
+              var tbody = document.createElement('tbody');
+              for (var i = 0; i < rows-1; i=i+2) {
+                if (i == 10 || i == 0) {
+                    var tr = document.createElement('tr');
+                }
+                var td = document.createElement('td');
+                var button = document.createElement('button');
+                button.className = 'list-button';
+                button.setAttribute('role', 'button');
+                const key = `num${i+1}`;
+                const img = `num${i}`;
+                button.id = json[key].toString().replace(' ','-');
+                button.setAttribute('nazwa', json[key])
+                button.setAttribute('data-string', string)
+                button.innerHTML = `<img src="${json[img]}">` + `<br>` + json[key];
+                button.onclick = function() {
+                    searchv2(this.id);
+                };
+                td.appendChild(button);
+                tr.appendChild(td);
+                tbody.appendChild(tr);
+              }
+              table.appendChild(tbody);
+              document.getElementById("centered").appendChild(table);
             }
-            var td = document.createElement('td');
-            var button = document.createElement('button');
-            button.className = 'list-button';
-            button.setAttribute('role', 'button');
-            const key = `num${i+1}`;
-            const img = `num${i}`;
-            button.id = json[key].toString().replace(' ','-');
-            button.setAttribute('nazwa', json[key])
-            button.setAttribute('data-string', string)
-            button.innerHTML = `<img src="${json[img]}">` + `<br>` + json[key];
-            button.onclick = function() {
-                searchv2(this.id);
-            };
-            td.appendChild(button);
-            tr.appendChild(td);
-            tbody.appendChild(tr);
-          }
-          table.appendChild(tbody);
-          document.getElementById("centered").appendChild(table);
-        }
 
-
+    {#  creating an element added to the list of propositions in the function above  #}
     function createName(string) {
         let mainDiv = document.createElement('div');
         mainDiv.setAttribute("align", "center");
@@ -299,6 +322,8 @@ function createTable(rows, json, string) {
         document.getElementById("centered").appendChild(mainDiv);
     }
 
+    {#  Search fuction after clicking the product in propositons list  #}
+    {#  fetching, finding products using Selenium scraper              #}
     function searchv2(clickedId) {
       console.log(clickedId)
       if (clickedId != -1){
@@ -306,7 +331,7 @@ function createTable(rows, json, string) {
         const name = document.getElementById(clickedId).getAttribute('nazwa');
         const string = document.getElementById(clickedId).getAttribute('data-string');
         const params = {params: name};
-        deleteExisting(string);
+        $("[data-string='"+string+"']").remove();
         fetch('/ceneo', {
             method: 'POST',
             headers: {
@@ -325,7 +350,7 @@ function createTable(rows, json, string) {
                         products.push(list['znalezione'][i]);
                     }
                 }
-                deletetab();
+                $("#tabelawynikow").remove();
                 algorithm(products);
             }
             if (Object.keys(list['nieznalezione']).length != 0) {
@@ -343,14 +368,7 @@ function createTable(rows, json, string) {
       }
     }
 
-    function deleteExisting(string) {
-        $("[data-string='"+string+"']").remove();
-    }
-
-    function deletetab() {
-      $("#tabelawynikow").remove();
-    }
-
+    {# fetching data to sort algorithm #}
     function algorithm(prods){
       console.log(prods)
         louder = document.getElementById("loading");
@@ -368,11 +386,5 @@ function createTable(rows, json, string) {
                 algorithmData = data;
               });
     }
-
-    function MakeTalbe(){
-      deletetab()
-      
-    }
-
     </script>
 {% endblock %}

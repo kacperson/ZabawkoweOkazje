@@ -16,12 +16,12 @@ from stronka.ceneo.main import ceneo_scrapper
 import stronka.algorithmSort as alg
 import json
 
-
 UPLOAD_FOLDER = "stronka/static/uploads"
 EXPORT_FOLDER = "stronka/static/exports"
 ALLOWED_EXTENSIONS = set(["txt"])
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 app.config["EXPORT_FOLDER"] = EXPORT_FOLDER
+
 
 @app.route("/")
 @app.route("/home")
@@ -40,11 +40,11 @@ def login_page():
     if form.validate_on_submit():
         attempted_user = User.query.filter_by(username=form.username.data).first()
         if (
-            attempted_user
-            and attempted_user.check_password_correction(
-                attempted_password=form.password.data
-            )
-            and attempted_user.active
+                attempted_user
+                and attempted_user.check_password_correction(
+            attempted_password=form.password.data
+        )
+                and attempted_user.active
         ):
             login_user(attempted_user)
             session['logged_in'] = True
@@ -66,11 +66,11 @@ def signin_page():
     form = RegisterForm()
     if form.validate_on_submit():
         user_to_create = User(
-            username = form.username.data,
-            email_address = form.email_address.data,
-            password = form.password1.data,
-            active = False,
-            verification_token = secrets.token_hex(16),
+            username=form.username.data,
+            email_address=form.email_address.data,
+            password=form.password1.data,
+            active=False,
+            verification_token=secrets.token_hex(16),
         )
         db.session.add(user_to_create)
         db.session.commit()
