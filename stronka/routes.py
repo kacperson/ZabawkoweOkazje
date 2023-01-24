@@ -201,15 +201,25 @@ def algo():
         data["TLP"] = alg.ProductsWithLowestPrice(products).get_products()
         data["TFS"] = alg.ProductsWithFewestShops(products).get_products()
         if 'logged_in' in session:
-            with open(os.path.join(app.config['EXPORT_FOLDER'], current_user.username), "w") as file:
-                json.dump(data, file, indent=4)
+            with open(os.path.join(app.config['EXPORT_FOLDER'], f'{current_user.username}TLP'), "w") as file:
+                json.dump(data["TLP"], file, indent=4)
+            with open(os.path.join(app.config['EXPORT_FOLDER'], f'{current_user.username}TFS'), "w") as file:
+                json.dump(data["TFS"], file, indent=4)
     return data
 
 
-@app.route("/getfile")
-def getfile():
+@app.route("/getfileTLP")
+def getfileTLP():
     return send_file(
-        f'static/exports/{current_user.username}',
-        download_name=f'ListaZakupow{current_user.username}.txt',
+        f'static/exports/{current_user.username}TLP',
+        download_name=f'ListaZakupow{current_user.username}TLP.txt',
+        as_attachment=True
+    )
+
+@app.route("/getfileTFS")
+def getfileTFS():
+    return send_file(
+        f'static/exports/{current_user.username}TFS',
+        download_name=f'ListaZakupow{current_user.username}TFS.txt',
         as_attachment=True
     )

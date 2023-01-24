@@ -51,7 +51,6 @@ class ProductsWithFewestShops:
         self.get_unique_products()
         group_by_shop = ProductGrouping(self.products).sort_by_shop_count(
             ProductGrouping(self.products).group_by("sklep"))
-        print(json.dumps(group_by_shop, indent=2))
         group_by_shop = ProductGrouping(self.products).sort_by_shop_sum(group_by_shop)
         tempList = []
         itemsCounter = 0

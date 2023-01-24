@@ -58,7 +58,7 @@
                 <!-- ***** Export of a list of products ***** -->
                 <div>
                     {% if current_user.is_authenticated %}
-                        <a class="export" href="{{ url_for('getfile') }}">Export <i class="fa-solid fa-file-export"></i></a>
+                        <a class="export" id="export_button">Export <i class="fa-solid fa-file-export"></i></a>
                     {% endif %}
                 </div>
             </div>
@@ -139,7 +139,7 @@
         return rows
     }
 
-    {# building table base #}
+    // {# building table base #}
     function robienietabeli(){
         const ListTxt = document.querySelector('.list-panel')
 
@@ -157,7 +157,7 @@
         ListTxt.insertAdjacentHTML("beforeend", tableHTML);
     }
 
-    {#adding products to the base of the table #}
+    // {#adding products to the base of the table #}
     function dodawanieDoTabeli(items) {
         if (document.getElementById('tabelawynikow') == null) {
           robienietabeli();
@@ -178,22 +178,24 @@
         table.insertAdjacentHTML('beforeend', rowsHTML);
     }
 
-    {#sorting by lowest price using algorithSort.py#}
+    // {#sorting by lowest price using algorithSort.py#}
     function sortByPrice(){
       $("#tabelawynikow").remove();
       robienietabeli()
       dodawanieDoTabeli(algorithmData["TLP"])
+      document.getElementById("export_button").setAttribute("href", "{{ url_for('getfileTLP')}}")
     }
 
-    {#sorting by number of shops using algorithSort.py#}
+    // {#sorting by number of shops using algorithSort.py#}
     function sortByShop(){
       $("#tabelawynikow").remove();
       robienietabeli()
       dodawanieDoTabeli(algorithmData["TFS"])
+      document.getElementById("export_button").setAttribute("href", "{{ url_for('getfileTFS')}}")
     }
 
-    {#searching products from files #}
-    {#fetching, showing list, finding products using Selenium scraper#}
+    // {#searching products from files #}
+    // {#fetching, showing list, finding products using Selenium scraper#}
     function searchbyfile(){
         const ListTxt = document.querySelector('.list-panel')
         if(ListTxt !== ""){
@@ -217,8 +219,8 @@
         });
     }
 
-    {#searching products from text field #}
-    {#fetching, finding products using Selenium scraper#}
+    // {#searching products from text field #}
+    // {#fetching, finding products using Selenium scraper#}
     function search(){
         const ListTxt = document.querySelector('.list-panel')
         if(ListTxt !== ""){
@@ -244,7 +246,7 @@
       });
     }
 
-    {# finding products, pushing results to sort algorithm or creating table of propositions  #}
+    // {# finding products, pushing results to sort algorithm or creating table of propositions  #}
     function findProduct(list) {
         let params = list["nazwy"];
         let notFound = list["nieznalezione"];
@@ -272,8 +274,8 @@
         }
     }
 
-    {#  Creating list with propositions of products shown. Products can by picked by clicking them. #}
-    {#  After a selection of sorting type, table with selected toys will be shown.                  #}
+    // {#  Creating list with propositions of products shown. Products can by picked by clicking them. #}
+    // {#  After a selection of sorting type, table with selected toys will be shown.                  #}
     function createTable(rows, json, string) {
               louder = document.getElementById("loading");
               louder.style.display="none";
@@ -306,7 +308,7 @@
               document.getElementById("centered").appendChild(table);
             }
 
-    {#  creating an element added to the list of propositions in the function above  #}
+    // {#  creating an element added to the list of propositions in the function above  #}
     function createName(string) {
         let mainDiv = document.createElement('div');
         mainDiv.setAttribute("align", "center");
@@ -322,8 +324,8 @@
         document.getElementById("centered").appendChild(mainDiv);
     }
 
-    {#  Search fuction after clicking the product in propositons list  #}
-    {#  fetching, finding products using Selenium scraper              #}
+    // {#  Search fuction after clicking the product in propositons list  #}
+    // {#  fetching, finding products using Selenium scraper              #}
     function searchv2(clickedId) {
       console.log(clickedId)
       if (clickedId != -1){
@@ -368,7 +370,7 @@
       }
     }
 
-    {# fetching data to sort algorithm #}
+    // {# fetching data to sort algorithm #}
     function algorithm(prods){
       console.log(prods)
         louder = document.getElementById("loading");
