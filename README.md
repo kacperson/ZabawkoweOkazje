@@ -49,7 +49,7 @@ Powyższa komenda automatycznie buduje i uruchamia kontener aplikacji i bazę da
 
 ## Dokumentacja
 ### stronka
-Folder, w którym snajduje się kod źródłowy strony.
+Folder, w którym znajduje się kod źródłowy strony.
 ### ceneo
 Folder, w którym znajduje się mechanizm pobierający dane na serwisie ceneo. 
 Pliki:
