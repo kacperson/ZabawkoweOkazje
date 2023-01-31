@@ -329,7 +329,8 @@
     function searchv2(clickedId) {
       console.log(clickedId)
       if (clickedId != -1){
-
+        louder = document.getElementById("loading");
+        louder.style.display="flex";
         const name = document.getElementById(clickedId).getAttribute('nazwa');
         const string = document.getElementById(clickedId).getAttribute('data-string');
         const params = {params: name};
