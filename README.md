@@ -4,7 +4,7 @@ Projekt ma na celu zbudowanie aplikacji webowej, która ma ułatwić zakupy inte
 
 ### UML działania aplikacji
 
-![image](https://user-images.githubusercontent.com/48855984/202875575-943e1324-acc2-4f01-8d02-9344975bf825.png)
+![image](https://user-images.githubusercontent.com/48855984/215847556-b299c87f-0cb5-4b90-83d3-e166f2bd02ba.png)
 
 ### przedmioty.json
 ```
