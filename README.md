@@ -3,8 +3,11 @@
 Projekt ma na celu zbudowanie aplikacji webowej, która ma ułatwić zakupy internetowe. 
 
 ### UML działania aplikacji
-
+#### Wyszukiwanie
 ![image](https://user-images.githubusercontent.com/48855984/215847556-b299c87f-0cb5-4b90-83d3-e166f2bd02ba.png)
+
+#### Rejestracja i Logowanie
+![image](https://user-images.githubusercontent.com/48855984/215851151-9889d798-7d47-42c1-b4a5-a02e2407e0de.png)
 
 ### przedmioty.json
 ```
