@@ -801,3 +801,16 @@ h5 {
   transform-origin: left;
   transform: scaleX(1);
 }
+
+#il_up{
+  margin: 2px;
+}
+
+#il_down{
+  margin: 2px;
+}
+
+#counter {
+
+
+}

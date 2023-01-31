@@ -10,64 +10,64 @@ class Ceneo:
         self.driver = driver
 
     def zwrotlista(self):
-        xd = []
+        tempList = []
         total_height = int(
             self.driver.execute_script("return document.body.scrollHeight")
         )
         for i in range(1, total_height, 20):
             self.driver.execute_script("window.scrollTo(0, {});".format(i))
-        lista_propozycji = WebDriverWait(self.driver, 10).until(
+        propositionsList = WebDriverWait(self.driver, 10).until(
             EC.presence_of_element_located((By.CLASS_NAME, "js_search-results"))
         )
-        ilosc = len(lista_propozycji.find_elements(By.XPATH, "./div"))
-        if ilosc > 11:
-            ilosc = 11
-        if ilosc > 2:
-            for i in range(0, ilosc - 2):
-                xd.append(
-                    lista_propozycji.find_element(
+        propositionsCounter = len(propositionsList.find_elements(By.XPATH, "./div"))
+        if propositionsCounter > 11:
+            propositionsCounter = 11
+        if propositionsCounter > 2:
+            for i in range(0, propositionsCounter - 2):
+                tempList.append(
+                    propositionsList.find_element(
                         By.XPATH, f'./div[@data-position="{i}"]/div/div[1]/a/img'
                     ).get_attribute("src")
                 )
-                xd.append(
-                    lista_propozycji.find_element(
+                tempList.append(
+                    propositionsList.find_element(
                         By.XPATH, f'./div[@data-position="{i}"]'
                     ).get_attribute("data-productname")
                 )
         else:
-            """lement = lista_propozycji.find_element(
+            """lement = propositionsList.find_element(
                 By.XPATH, f'./div[@data-position="0"]'
             )
             self.driver.execute_script("arguments[0].click()", element)"""
-        return xd, lista_propozycji
+        return tempList, propositionsList
 
-    def wyszukiwanie(self, lista_propozycji, numer):
+    def wyszukiwanie(self, propositionsList, number):
         if (
-            lista_propozycji.find_element(
+            propositionsList.find_element(
                 By.XPATH,
-                f'./div[@data-position="{numer-1}"]/div/div[2]/div[2]/div/a',
+                f'./div[@data-position="{number-1}"]/div/div[2]/div[2]/div/a',
             ).text.lower()
             == "idź do sklepu"
         ):
             products = []
             attributes = {}
-            attributes["nazwa"] = lista_propozycji.find_element(
-                By.XPATH, f'./div[@data-position="{numer-1}"]'
+            attributes["nazwa"] = propositionsList.find_element(
+                By.XPATH, f'./div[@data-position="{number-1}"]'
             ).get_attribute("data-productname")
-            sklep = lista_propozycji.find_element(
-                By.XPATH, f'./div[@data-position="{numer-1}"]'
+            shop = propositionsList.find_element(
+                By.XPATH, f'./div[@data-position="{number-1}"]'
             )
-            attributes["cena"] = float(sklep.get_attribute("data-price").replace(",", "."))
+            attributes["cena"] = float(shop.get_attribute("data-price").replace(",", "."))
             attributes["cena_dostawy"] = 0
             attributes["sklep"] = (
-                sklep.get_attribute("data-shopurl")
+                shop.get_attribute("data-shopurl")
                 .replace("https://", "", 1)
                 .replace("http://", "", 1)
             )
-            attributes["img_src"] = sklep.find_element(
+            attributes["img_src"] = shop.find_element(
                 By.XPATH, f"./div/div/a/img"
             ).get_attribute("src")
-            linkv1 = sklep.find_element(By.CLASS_NAME, "go-to-shop").get_attribute(
+            linkv1 = shop.find_element(By.CLASS_NAME, "go-to-shop").get_attribute(
                 "href"
             )
             try:
@@ -77,8 +77,8 @@ class Ceneo:
             products.append(attributes)
             return products
         else:
-            element = lista_propozycji.find_element(
-                By.XPATH, f'./div[@data-position="{numer-1}"]/div/div[2]/div[2]/a[1]'
+            element = propositionsList.find_element(
+                By.XPATH, f'./div[@data-position="{number-1}"]/div/div[2]/div[2]/a[1]'
             )
             self.driver.execute_script("arguments[0].click()", element)
             products = self.raporcik()
@@ -96,58 +96,58 @@ class Ceneo:
             total_height = int(self.driver.execute_script("return document.body.scrollHeight"))
             for i in range(1, total_height, 20):
                 self.driver.execute_script("window.scrollTo(0, {});".format(i))
-            ilosc_ofert = self.driver.find_element(By.CLASS_NAME, "js_normal-offers")
-            ilosc = len(ilosc_ofert.find_elements(By.XPATH, "./li"))
-            for numerek in range(1, ilosc+1):
+            offersNumber = self.driver.find_element(By.CLASS_NAME, "js_normal-offers")
+            propositionsCounter = len(offersNumber.find_elements(By.XPATH, "./li"))
+            for number in range(1, propositionsCounter+1):
                 attributes = {}
                 attributes["nazwa"] = self.driver.find_element(
                     By.CLASS_NAME, "product-top__product-info__name"
                 ).text
-                if ilosc > 1:
-                    sklep = ilosc_ofert.find_element(By.XPATH, f"./li[{numerek}]")
+                if propositionsCounter > 1:
+                    shop = offersNumber.find_element(By.XPATH, f"./li[{number}]")
                 else:
-                    sklep = ilosc_ofert.find_element(
+                    shop = offersNumber.find_element(
                         By.XPATH, f"./li/div/div[1]/div[1]/div[3]"
                     )
-                if sklep.get_attribute("class") == "product-offers__list__ado-item ado-common":
+                if shop.get_attribute("class") == "product-offers__list__ado-item ado-common":
                     continue
-                cena = (
-                    sklep.find_element(By.CLASS_NAME, "value").text
-                    + sklep.find_element(By.CLASS_NAME, "penny").text
+                price = (
+                    shop.find_element(By.CLASS_NAME, "value").text
+                    + shop.find_element(By.CLASS_NAME, "penny").text
                 ).replace(" ","").replace(",", ".")
-                attributes["cena"] = float(cena)
+                attributes["cena"] = float(price)
                 element = self.driver.find_element(
                     By.CLASS_NAME, "gallery-carousel__media-container"
                 )
                 attributes["img_src"] = element.find_element(
                     By.XPATH, "./div/div[1]/a/img"
                 ).get_attribute("src")
-                dostawa = sklep.find_element(By.CLASS_NAME, "product-delivery-info")
-                cena_dostawy = dostawa.text
-                if cena_dostawy[:9] != "Z wysyłką":
-                    if cena_dostawy.lower() == "szczegóły dostawy":
-                        cena_dostawy = 9.00
+                shipping = shop.find_element(By.CLASS_NAME, "product-delivery-info")
+                deliveryPrice = shipping.text
+                if deliveryPrice[:9] != "Z wysyłką":
+                    if deliveryPrice.lower() == "szczegóły dostawy":
+                        deliveryPrice = 9.00
                     try:
-                        pom = dostawa.find_element(
+                        pom = shipping.find_element(
                             By.CLASS_NAME, "free-delivery-label"
                         ).text
                         print(pom)
                         if pom.lower() == "darmowa wysyłka":
-                            cena_dostawy = 0.00
+                            deliveryPrice = 0.00
                     except selenium.common.exceptions.NoSuchElementException:
                         pass
                 else:
-                    cena_dostawy = float(cena_dostawy[12:19].replace(",", ".")) - float(cena)
-                print(cena_dostawy)
-                attributes["cena_dostawy"] = cena_dostawy
-                if ilosc == 1:
-                    sklep = ilosc_ofert.find_element(By.XPATH, f"./li")
+                    deliveryPrice = float(deliveryPrice[12:19].replace(",", ".")) - float(price)
+                print(deliveryPrice)
+                attributes["cena_dostawy"] = deliveryPrice
+                if propositionsCounter == 1:
+                    shop = offersNumber.find_element(By.XPATH, f"./li")
                 attributes["sklep"] = (
-                    sklep.find_element(
+                    shop.find_element(
                         By.CLASS_NAME, "js_product-offer-link"
                     ).get_attribute("innerHTML")
                 ).replace("Dane i opinie o ", "")
-                linkv1 = "www.ceneo.pl" + sklep.find_element(
+                linkv1 = "www.ceneo.pl" + shop.find_element(
                     By.CLASS_NAME, "product-offer__container"
                 ).get_attribute("data-click-url")
                 try:

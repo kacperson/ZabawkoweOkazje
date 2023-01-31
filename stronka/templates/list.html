@@ -150,6 +150,7 @@
                                 <th>Sklep</th>
                                 <th>Cena</th>
                                 <th>Cena dostawy</th>
+                                <th>Ilosc</th>
                             </thead>
                             <tbody id="wyniki">
                             </tbody>
@@ -170,12 +171,45 @@
                         <td><img src="${items[i].img_src}"></td>
                         <td class="link"><a href="${items[i].link}">${items[i].nazwa}</a></td>
                         <td>${items[i].sklep}</td>
-                        <td>${items[i].cena}</td>
+                        <td id="price${i}">${items[i].cena}</td>
                         <td>${items[i].cena_dostawy}</td>
+                        <td><a id="il_up" type="button" onclick="Up_quantity(${i}, ${items[i].cena})"><i class="fa-solid fa-caret-up"></i></a>
+                             <p id="counter${i}">1</p>
+                            <a id="il_down" type="button" onclick="Down_quantity(${i}, ${items[i].cena})"><i class="fa-solid fa-caret-down"></i></a></td>
                       </tr>`;
         }
 
+
+
         table.insertAdjacentHTML('beforeend', rowsHTML);
+    }
+   const upButton = document.getElementById("il_up");
+   const downButton= document.getElementById("il_down");
+
+    function Up_quantity(i, price_i){
+      const priceCell =document.getElementById("price" + i.toString());
+      const QuantityCell =document.getElementById("counter" + i.toString());
+      const price = parseFloat(priceCell.innerHTML);
+      const quantity = parseFloat(QuantityCell.innerHTML);
+      let newPrice = price + price_i;
+      let newQuantity = quantity + 1;
+      priceCell.innerHTML = newPrice.toFixed(2);
+      QuantityCell.innerHTML = newQuantity.toString();
+    }
+
+    function Down_quantity(i, price_i){
+      const priceCell =document.getElementById("price" + i.toString());
+      const QuantityCell =document.getElementById("counter" + i.toString());
+      const price = parseFloat(priceCell.innerHTML);
+      const quantity = parseFloat(QuantityCell.innerHTML);
+        console.log(price)
+        console.log(quantity)
+      if(quantity>1){
+          let newPrice = price - price_i;
+          let newQuantity = quantity - 1;
+          priceCell.innerHTML = newPrice.toFixed(2);
+          QuantityCell.innerHTML = newQuantity.toString();
+      }
     }
 
     // {#sorting by lowest price using algorithSort.py#}
@@ -217,6 +251,7 @@
         .then(lista => {
             findProduct(lista)
         });
+        window.scrollTo(0, 700);
     }
 
     // {#searching products from text field #}
@@ -244,6 +279,7 @@
       .then(lista => {
           findProduct(lista)
       });
+      window.scrollTo(0, 700);
     }
 
     // {# finding products, pushing results to sort algorithm or creating table of propositions  #}
