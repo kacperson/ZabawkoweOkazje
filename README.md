@@ -1,6 +1,6 @@
 # Projekt-IO
 ## Opis
-Projekt ma na celu zbudowanie aplikacji webowej, która ma ułatwić zakupy internetowe.
+Projekt ma na celu zbudowanie aplikacji webowej, która ma ułatwić zakupy internetowe. 
 
 ### UML działania aplikacji
 
@@ -12,15 +12,21 @@ Projekt ma na celu zbudowanie aplikacji webowej, która ma ułatwić zakupy inte
  "id"               :"int"
  "nazwa"            :"string",
  "cena"             :"float",
- "cena dostawy"     :"float",
- "dostawca"         :"string",
- "czas_dostarczenia":"time",
+ "cena_dostawy"     :"float",
+ "sklep"            :"string",
  "link"             :"string"
 }
 ```
 
-### nazwy.csv
-`nazwa1, nazwa2, nazwa3, ..., nazwan`
+### nazwy.txt
+```txt
+nazwa1
+nazwa2
+nazwa3
+.
+.
+nazwan
+```
 
 ### lokalna baza danych
 ![image](https://user-images.githubusercontent.com/48855984/214115030-ef674153-a5af-438d-8e5b-31c1d2ed717c.png)
@@ -37,3 +43,27 @@ Aby uruchomić aplikację, potrzebujesz dockera.
 ```
 
 Powyższa komenda automatycznie buduje i uruchamia kontener aplikacji i bazę danych
+
+## Dokumentacja
+### stronka
+Folder, w którym snajduje się kod źródłowy strony.
+### ceneo
+Folder, w którym znajduje się mechanizm pobierający dane na serwisie ceneo. 
+Pliki:
+- chromedriver - silnik wyszukiwarki chrome dla urządzeń Linux
+- chromedriver.exe - silnik wyszukiwarki chrome dla urządzeń Windows
+- `main.py`, `my_ceneo.py` - moduły w których napisany jest mechanizm szukający
+
+### static i templates
+Foldery, w których napisany jest frontend strony. Zawiera:
+- css
+- html
+- obrazki
+- pliki wysłane na serwer
+
+### Moduły:
+- `algorithmSort.py` - algorytm który jest używany do dobierania najtańszych produktów i produktów z najmniejszej ilości sklepów
+- `forms.py` - formularze używane do logowania i rejestracji
+- `models.py` - architektura bazy danych
+- `routes.py` - warstwa komunikacji frontendu z backendem
+- `sendmail.py` - moduł wysyłający mail potwierdzający
