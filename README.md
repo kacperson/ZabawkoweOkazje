@@ -1,6 +1,6 @@
 # Projekt-IO
 ## Opis
-Projekt ma na celu zbudowanie aplikacji webowej, która ma ułatwić zakupy internetowe. 
+Projekt ma na celu zbudowanie aplikacji webowej, która ma ułatwić zakupy internetowe. Użytkownik po wprowadzeniu danych ręcznie bądź importując plik wyszukuje przedmiotów. Jeżeli przedmioty, których szukał nie były jednoznaczne to aplikacja zasugeruje różne propozycje, na które użytkownik może się zdecydować. Po dokonaniu wyboru strona ponownie wyszuka podanych przedmiotów. Wyniki wyszukiwania zostaną przepuszczone przez algorytm, który wybierze przedmioty najtańsze oraz te z najmniejszej ilości sklepów. Użytkownik będzie mógł pobrać posortowane wyniki, a dodatkowo (jeżeli będzie zalogowany) zobaczyć historię wyszukiwania.
 
 ### UML działania aplikacji
 #### Wyszukiwanie
