@@ -7,7 +7,7 @@ Projekt ma na celu zbudowanie aplikacji webowej, która ma ułatwić zakupy inte
 ![image](https://user-images.githubusercontent.com/48855984/215847556-b299c87f-0cb5-4b90-83d3-e166f2bd02ba.png)
 
 #### Rejestracja i Logowanie
-![image](https://user-images.githubusercontent.com/48855984/215851151-9889d798-7d47-42c1-b4a5-a02e2407e0de.png)
+![image](https://user-images.githubusercontent.com/48855984/215851448-87b2ff7a-3c43-4966-af90-ee63149c1ce4.png)
 
 ### przedmioty.json
 ```
