@@ -4,6 +4,7 @@ import secrets
 import flask
 import flask_login
 from werkzeug.security import safe_join
+from sqlalchemy import text
 
 from stronka.sendmail import send_verification_email
 from flask import render_template, redirect, url_for, flash, request, abort, send_file, send_from_directory, session
@@ -156,7 +157,7 @@ def get_ceneo():
 
 @app.route("/profile", methods=["GET"])
 def show_history():
-    query0 = f'SELECT * FROM history  WHERE user_id={current_user.id} ORDER BY id'
+    query0 = text(f'SELECT * FROM history  WHERE user_id={current_user.id} ORDER BY id')
     all_items = db.session.execute(query0)
     items_list = []
     for row in all_items:
