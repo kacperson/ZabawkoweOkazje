@@ -810,7 +810,19 @@ h5 {
   margin: 2px;
 }
 
-#counter {
+.Checkout {
+  text-align: right;
+  border-width: 3px;
+  border-radius: 15px;
+  border-color: #6799E0;
+}
 
+.price-font {
+  font-weight: bold;
+}
 
+#total {
+  font-weight: bolder;
+  font-size: 20px;
+  color: rgb(238,174,202);
 }

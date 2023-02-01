@@ -65,6 +65,7 @@
 
             <!-- ***** List of products ***** -->
             <div class="list-panel" id="centered">
+
             </div>
 
         </div>
@@ -143,7 +144,7 @@
     function robienietabeli(){
         const ListTxt = document.querySelector('.list-panel')
 
-        let tableHTML = `<table id="tabelawynikow"">
+        let tableHTML = `<table id="tabelawynikow">
                             <thead class="row-hist">
                                 <th>Fotka</th>
                                 <th>Nazwa</th>
@@ -154,9 +155,12 @@
                             </thead>
                             <tbody id="wyniki">
                             </tbody>
-                        </table>`
+                        </table>
+                        <div id="checkout"></div>`
         ListTxt.insertAdjacentHTML("beforeend", tableHTML);
     }
+
+
 
     // {#adding products to the base of the table #}
     function dodawanieDoTabeli(items) {
@@ -164,56 +168,85 @@
           robienietabeli();
         }
         let table = document.getElementById('wyniki');
+        let check = document.getElementById('checkout');
         let rowsHTML = '';
-
+        let PriceSum = 0;
+        let PriceDel = 0;
+        let Total = 0;
         for (let i = 0; i < items.length; i++) {
           rowsHTML += `<tr>
                         <td><img src="${items[i].img_src}"></td>
                         <td class="link"><a href="${items[i].link}">${items[i].nazwa}</a></td>
                         <td>${items[i].sklep}</td>
-                        <td id="price${i}">${items[i].cena}</td>
-                        <td>${items[i].cena_dostawy}</td>
+                        <td id="price${i}">${items[i].cena.toFixed(2)}</td>
+                        <td>${items[i].cena_dostawy.toFixed(2)}</td>
                         <td><a id="il_up" type="button" onclick="Up_quantity(${i}, ${items[i].cena})"><i class="fa-solid fa-caret-up"></i></a>
                              <p id="counter${i}">1</p>
                             <a id="il_down" type="button" onclick="Down_quantity(${i}, ${items[i].cena})"><i class="fa-solid fa-caret-down"></i></a></td>
                       </tr>`;
+          PriceSum += items[i].cena;
+          PriceDel += items[i].cena_dostawy;
+          Total += PriceSum + PriceDel;
+          checkoutHTML = ` <h4>Podsumowanie</h4>
+                            <p>Cena produktów: </p>
+                            <p class="price-font" id="pricesum">${PriceSum.toFixed(2)}</p>
+                            <p>Dostawa: </p>
+                            <p class="price-font" id="pricedel">${PriceDel.toFixed(2)}</p>
+                            <p>Łącznie: </p>
+                            <p class="price-font" id="total">${Total.toFixed(2)}</p>
+                        `
+
         }
-
-
-
         table.insertAdjacentHTML('beforeend', rowsHTML);
+        check.insertAdjacentHTML('beforeend', checkoutHTML);
+
     }
-   const upButton = document.getElementById("il_up");
-   const downButton= document.getElementById("il_down");
+
 
     function Up_quantity(i, price_i){
+       const SumPriceField = document.getElementById("pricesum");
+       const SumDelField = document.getElementById("pricedel");
+       const TotalField = document.getElementById("total");
       const priceCell =document.getElementById("price" + i.toString());
       const QuantityCell =document.getElementById("counter" + i.toString());
       const price = parseFloat(priceCell.innerHTML);
       const quantity = parseFloat(QuantityCell.innerHTML);
+      const sum = parseFloat(SumPriceField.innerHTML);
+      const delivery = parseFloat(SumDelField.innerHTML);
       let newPrice = price + price_i;
+      let newSum = sum + price_i;
       let newQuantity = quantity + 1;
+
       priceCell.innerHTML = newPrice.toFixed(2);
       QuantityCell.innerHTML = newQuantity.toString();
+      SumPriceField.innerHTML = newSum.toFixed(2);
+      TotalField.innerHTML = (newSum + delivery).toFixed(2);
     }
 
     function Down_quantity(i, price_i){
+       const SumPriceField = document.getElementById("pricesum");
+       const SumDelField = document.getElementById("pricedel");
+       const TotalField = document.getElementById("total");
       const priceCell =document.getElementById("price" + i.toString());
       const QuantityCell =document.getElementById("counter" + i.toString());
       const price = parseFloat(priceCell.innerHTML);
       const quantity = parseFloat(QuantityCell.innerHTML);
-        console.log(price)
-        console.log(quantity)
+      const sum = parseFloat(SumPriceField.innerHTML);
+      const delivery = parseFloat(SumDelField.innerHTML);
       if(quantity>1){
           let newPrice = price - price_i;
+          let newSum = sum - price_i;
           let newQuantity = quantity - 1;
           priceCell.innerHTML = newPrice.toFixed(2);
           QuantityCell.innerHTML = newQuantity.toString();
+          SumPriceField.innerHTML = newSum.toFixed(2);
+          TotalField.innerHTML = (newSum + delivery).toFixed(2);
       }
     }
 
     // {#sorting by lowest price using algorithSort.py#}
     function sortByPrice(){
+      $("#checkout").remove();
       $("#tabelawynikow").remove();
       robienietabeli()
       dodawanieDoTabeli(algorithmData["TLP"])
@@ -222,6 +255,7 @@
 
     // {#sorting by number of shops using algorithSort.py#}
     function sortByShop(){
+      $("#checkout").remove();
       $("#tabelawynikow").remove();
       robienietabeli()
       dodawanieDoTabeli(algorithmData["TFS"])
@@ -389,6 +423,7 @@
                         products.push(list['znalezione'][i]);
                     }
                 }
+                $("#checkout").remove();
                 $("#tabelawynikow").remove();
                 algorithm(products);
             }

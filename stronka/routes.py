@@ -156,9 +156,7 @@ def get_ceneo():
 
 @app.route("/profile", methods=["GET"])
 def show_history():
-    # history = SearchHistory.query.filter_by(user_id=current_user.id)
-    # tempDict = {record.search_date: record.items.split(sep=",") for record in history}
-    query0 = 'SELECT * FROM history ORDER BY id'
+    query0 = f'SELECT * FROM history  WHERE user_id={current_user.id} ORDER BY id'
     all_items = db.session.execute(query0)
     items_list = []
     for row in all_items:
