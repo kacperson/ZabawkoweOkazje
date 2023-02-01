@@ -11,7 +11,7 @@ MarkupSafe==2.1.1
 six==1.16.0
 Werkzeug==2.2.2
 zipp==3.8.1
-Flask-SQLAlchemy==2.5.1
+Flask-SQLAlchemy
 Flask-Bcrypt==1.0.1
 Flask-WTF==1.0.1
 Flask-Login==0.6.2
